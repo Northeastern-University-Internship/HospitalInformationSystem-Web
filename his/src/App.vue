@@ -1,46 +1,34 @@
 <template>
   <div id="app">
-    <Header></Header>
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>|
-    </nav>
-    <router-view/>
-    <Footer></Footer>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-  import Header from './components/common/Header.vue'
-  import Footer from './components/common/Footer.vue'
-  export default {
-    name: 'App',
-    components: {
-      Header,
-      Footer
-    }
-  }
+export default {
+  name: 'App'
+}
 </script>
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
 }
-
-nav {
-  padding: 30px;
+.control-xl {
+  width: 250px;
+  margin-bottom: 20px;
+  margin-right: 30px;
 }
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+.control-l {
+  width: 180px;
+  margin-bottom: 20px;
+  margin-right: 30px;
 }
-
-nav a.router-link-exact-active {
-  color: #42b983;
+.control {
+  width: 150px;
+  margin-bottom: 20px;
+  margin-right: 30px;
 }
-</style>[]
+</style>
