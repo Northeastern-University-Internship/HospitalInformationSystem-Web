@@ -20,11 +20,7 @@ const routes = [
   //   name: 'basicFrame',
   //   component: () => import('../views/BasicFrame.vue')
   // },
-  {
-    path: '/testFrame',
-    name: 'testFrame',
-    component: () => import('../views/TestFrame.vue')
-}
+
 ]
 
 const router = createRouter({

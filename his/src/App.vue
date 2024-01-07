@@ -1,10 +1,26 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div id="app">
+    <Header></Header>
+    <nav>
+      <router-link to="/">Home</router-link> |
+      <router-link to="/about">About</router-link>|
+    </nav>
+    <router-view/>
+    <Footer></Footer>
+  </div>
 </template>
+
+<script>
+  import Header from './components/common/Header.vue'
+  import Footer from './components/common/Footer.vue'
+  export default {
+    name: 'App',
+    components: {
+      Header,
+      Footer
+    }
+  }
+</script>
 
 <style>
 #app {
@@ -27,4 +43,4 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
-</style>
+</style>[]
