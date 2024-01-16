@@ -1,8 +1,8 @@
 {
-  "name": "NEUsoft_project",
-  "version": "1.0.0",
-  "description": "This project I made for NEUsoft_project",
-  "author": "Hasan Md Emran <writetoemran@outllok.com>",
+  "name": "neusoft_hospitalinformationsystem",
+  "version": "2.1.1",
+  "description": "Northeastern University 东软医疗  Hospital Information System",
+  "author": "Front-end: Emran&Junghoon",
   "private": true,
   "scripts": {
     "serve": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

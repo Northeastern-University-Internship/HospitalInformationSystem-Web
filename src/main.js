@@ -3,6 +3,8 @@
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale/lang/en';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+
 import Vue from 'vue'
 import App from './App'
 import VueResource from 'vue-resource'
@@ -20,8 +22,8 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requireAuth) {
     if (store.state.user) {
       if (store.state.user.type == 1) {
-        if (to.path == "/index/register" || to.path == "/index/withdraw") next()
-        else if (to.path == "/index") next("/index/register")
+        if (to.path == "/index/registration" || to.path == "/index/registration") next()
+        else if (to.path == "/index") next("/index/registration")
         else next(from.path)
       } else if (store.state.user.type == 2) {
         if (to.path == "/index/diagnose" || to.path == "/index/make_presc") next()

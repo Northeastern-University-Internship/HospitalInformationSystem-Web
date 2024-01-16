@@ -3,7 +3,11 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Index from '@/components/Index'
-import Register from '@/components/Register'
+import Registration from '@/components/Registration/Registration'
+import Refund from '@/components/Registration/Refund'
+import Withdraw from '@/components/Registration/Withdraw'
+import ExpenseRecordQuery from '@/components/Registration/ExpenseRecordQuery'
+import WithdrawCharges from '@/components/Registration/WithdrawCharges'
 
 Vue.use(Router)
 
@@ -29,12 +33,31 @@ export default new Router({
       component: Index,
       children: [
         {
-          path: 'register',
-          name: 'Register',
-          component: Register,
+          path: 'registration',
+          name: 'Registration',
+          component: Registration,
           // meta: {
           //   requireAuth: true
           // }
+        },
+        {
+          path: 'withdraw',
+          name: 'Withdraw',
+          component: Withdraw,
+        },
+        {
+          path: 'charges',
+          name: 'WithdrawCharges',
+          component: WithdrawCharges,
+        },
+        {
+          path: 'refund',
+          name: 'Refund',
+          component: Refund,
+        },{
+          path: 'expense',
+          name: 'ExpenseRecordQuery',
+          component: ExpenseRecordQuery,
         }
       ]
     }
