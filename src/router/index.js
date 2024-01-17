@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Login from '@/components/Login'
 import SignUp from '@/components/SignUp'
 import Index from '@/components/Index'
-import Registration from '@/components/Registration/Registration'
+// import Registration from '@/components/Registration/Registration'
 import Refund from '@/components/Registration/Refund'
 import Withdraw from '@/components/Registration/Withdraw'
 import ExpenseRecordQuery from '@/components/Registration/ExpenseRecordQuery'
@@ -32,14 +32,14 @@ export default new Router({
       name: 'Index',
       component: Index,
       children: [
-        {
-          path: 'registration',
-          name: 'Registration',
-          component: Registration,
-          // meta: {
-          //   requireAuth: true
-          // }
-        },
+        // {
+        //   path: 'registration',
+        //   name: 'Registration',
+        //   component: Registration,
+        //   // meta: {
+        //   //   requireAuth: true
+        //   // }
+        // },
         {
           path: 'withdraw',
           name: 'Withdraw',
