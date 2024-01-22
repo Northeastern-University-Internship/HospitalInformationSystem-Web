@@ -1,56 +1,26 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-
 import Vue from 'vue'
-import App from './App'
-import VueResource from 'vue-resource'
+import App from './App.vue'
 import router from './router'
 import store from './store'
 
-Vue.use(ElementUI, { locale });
-Vue.use(VueResource)
-Vue.use(ElementUI)
+import Element from 'element-ui'
+import "element-ui/lib/theme-chalk/index.css"
+
+import axios from "./axios";
+import qs from 'qs';
+import './assets/global.css'
+
 Vue.config.productionTip = false
-// var axios = require('axios')
-// axios.defaults.baseURL = 'http://localhost:8001'
 
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requireAuth) {
-//     if (store.state.user) {
-//       if (store.state.user.type == 1) {
-//         if (to.path == "/index/registration" || to.path == "/index/registration") next()
-//         else if (to.path == "/index") next("/index/registration")
-//         else next(from.path)
-//       } else if (store.state.user.type == 2) {
-//         if (to.path == "/index/diagnose" || to.path == "/index/make_presc") next()
-//         else if (to.path == "/index") next("/index/diagnose")
-//         else next(from.path)
-//       } else if (store.state.user.type == 3) {
-//         // Examiner
-//       } else if (store.state.user.type == 4) {
-//         if (to.path == "/index/drug_trans" || to.path == "/index/drug_rcv") next()
-//         else if (to.path == "/index") next("/index/drug_trans")
-//         else next(from.path)
-//       } else if (store.state.user.type == 5) {
-//         if (to.path == "/index/pay" || to.path == "/index/refund") next()
-//         else if (to.path == "/index") next("/index/pay")
-//         else next(from.path)
-//       } else {
-//         //Administrator
-//       }
-//     } else next('/login')
-//   } else next()
-// })
+Vue.use(Element);
 
-/* eslint-disable no-new */
+Vue.prototype.$axios = axios;// 全局使用
+Vue.prototype.$qs = qs;
+
+// require("./mock");
+
 new Vue({
-  el: '#app',
   router,
   store,
-  components: { App },
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')

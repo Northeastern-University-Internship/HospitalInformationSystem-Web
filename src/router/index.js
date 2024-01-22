@@ -1,65 +1,117 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Login from '@/components/Login'
-import SignUp from '@/components/SignUp'
-import Index from '@/components/Index'
-// import Registration from '@/components/Registration/Registration'
-import Refund from '@/components/Registration/Refund'
-import Withdraw from '@/components/Registration/Withdraw'
-import ExpenseRecordQuery from '@/components/Registration/ExpenseRecordQuery'
-import WithdrawCharges from '@/components/Registration/WithdrawCharges'
+import VueRouter from 'vue-router'
+import Home from '../views/Home.vue'
+import Index from '../views/Index.vue'
+import User from '../views/systemRoll/User.vue'
+import Role from '../views/systemRoll/Role.vue'
+import Menu from '../views/systemRoll/Menu.vue'
+import UserCenter from "@/views/UserCenter";
+import axios from "../axios";
+import store from "../store"
+import qs from "qs";
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      redirect: '/login'
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login
-    },
-    {
-      path: '/sign_up',
-      name: 'SignUp',
-      component: SignUp
-    },
-    {
-      path: '/index',
-      name: 'Index',
-      component: Index,
-      children: [
-        // {
-        //   path: 'registration',
-        //   name: 'Registration',
-        //   component: Registration,
-        //   // meta: {
-        //   //   requireAuth: true
-        //   // }
-        // },
-        {
-          path: 'withdraw',
-          name: 'Withdraw',
-          component: Withdraw,
-        },
-        {
-          path: 'charges',
-          name: 'WithdrawCharges',
-          component: WithdrawCharges,
-        },
-        {
-          path: 'refund',
-          name: 'Refund',
-          component: Refund,
-        },{
-          path: 'expense',
-          name: 'ExpenseRecordQuery',
-          component: ExpenseRecordQuery,
-        }
-      ]
-    }
-  ]
+Vue.prototype.$qs = qs;
+
+const routes = [
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+    redirect: '/login',
+    children: [
+      {
+        path: '/index',
+        name: 'Index',
+        component: Index
+      },
+      {
+        path: '/userCenter',
+        name: 'UserCenter',
+        component: UserCenter
+      },
+    ]
+  },
+
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+  }
+]
+
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes
 })
+
+// router.afterEach((to, from) => {
+//
+// })
+
+router.beforeEach((to, from, next) => {
+  let hasRoute = store.state.menus.hasRoute
+  let param = localStorage.getItem("User");
+  console.log("本地User1 = ", param);
+  if (!hasRoute && JSON.parse(localStorage.getItem("User")) !== null) {
+    let param = JSON.parse(localStorage.getItem("User"));
+    console.log("本地User2 = ", param);
+    axios.post("/sys/menu/nav", param).then(res => {
+      let authorization = [];
+      let temp = {};
+      temp.data = {
+        nav: res.data.data,
+        authorization: authorization
+      }
+
+      console.log("Menu Navigation = ", temp.data);
+      //Getting Menu Navigation
+      store.commit("setMenuList", temp.data.nav)
+      //Getting Authority of the User
+      store.commit("setPermList", temp.data.authorization)
+
+      //connecting user Location
+      let newRoutes = router.options.routes;
+      temp.data.nav.forEach(menu => {
+        if (menu.children) {
+          menu.children.forEach(e => {
+            //changing User IP Location
+            let route = menuToRoute(e);
+            //push into the user Location
+            if (route) {
+              newRoutes[0].children.push(route)
+            }
+          })
+        }
+      })
+      router.addRoutes(newRoutes);
+      hasRoute = true;
+      store.commit("changeRouteStatus", hasRoute)
+    })
+  }
+
+
+
+  next();
+})
+
+//navigate to menu
+const menuToRoute = (menu) => {
+  if (!menu.component) {
+    return null;
+  }
+  let route = {
+    name: menu.name,
+    path: menu.path,
+    meta: {
+      icon: menu.icon,
+      title: menu.title
+    }
+  }
+  route.component = () => import('@/views/' + menu.component + '.vue')
+  return route
+}
+
+export default router
