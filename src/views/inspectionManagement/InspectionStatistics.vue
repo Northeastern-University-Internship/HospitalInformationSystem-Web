@@ -73,7 +73,7 @@ export default {
 
   methods: {
     countN(){
-      let url='/outpatientMedicalTechnologyWorkstation/personalWorkloadStatistics/selectByID';
+      let url='/inspectionManagement/inspectionStatistics/selectByID';
       console.log('testtesttest')
       this.$axios.post(url)
           .then( (resp)=>{
@@ -84,7 +84,7 @@ export default {
           } )
     },
     doQuery(){
-      let url='/outpatientMedicalTechnologyWorkstation/personalWorkloadStatistics/selectAll';
+      let url='/inspectionManagement/inspectionStatistics/selectAll';
       let params = this.$qs.stringify(this.addForm);
       console.log('testtesttest')
       console.log(params)

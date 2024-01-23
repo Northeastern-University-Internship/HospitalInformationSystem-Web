@@ -73,7 +73,6 @@
           :total="total">
       </el-pagination>
     </div>
-    <!--    Common project maintenance-->
     <el-dialog width="45%" align="center" :visible.sync="maintainDialog">
       <el-transfer
           style="text-align: left; display: inline-block;"
@@ -93,10 +92,7 @@
         <el-button class="transfer-footer" slot="right-footer" size="small">View selected</el-button>
       </el-transfer>
       <el-button type="info" style="margin-left: 10px" size="small" @click="maintainDialog = false">quit</el-button>
-    </el-dialog>
-
-    <!--    //Pop up prompt box-->
-    <el-dialog
+    </el-dialog
         title="hint"
         :visible.sync="dialogVisible"
         width="40%">
@@ -122,11 +118,7 @@
           <el-button @click="dialogVisible = false">Cancel</el-button>
         </el-form>
       </div>
-
     </el-dialog>
-
-
-    <!--    //Pop up prompt box-->
     <el-dialog
         title="hint"
         :visible.sync="fmeditemVisbles"
@@ -258,9 +250,6 @@ export default {
       console.log("-----------")
       console.log(this.data)
     },
-    // Fuzzy search RealName, use axios to send a post request to the backend, and transfer the incoming userInfo.RealName value
-    // When we make a post request, axios will help us convert the request data and response data and automatically convert the JSON data
-    // The date after res.date.date is the required data transmitted from the backend.
     search() {
       console.log(this.userInfo.RealName);
       this.$axios.post('/getCheckApplyAll', this.$qs.stringify(this.userInfo)).then(res => {
@@ -297,7 +286,6 @@ export default {
     updatePrice() {
       this.dialogVisible = true
     },
-
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -313,8 +301,6 @@ export default {
       this.$refs[formName].resetFields();
     }
   }
-
-
 }
 </script>
 

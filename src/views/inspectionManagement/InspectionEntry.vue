@@ -107,12 +107,10 @@
           <el-input class="box-card" v-model="checkApplyInFormation.result" placeholder="结果"></el-input>
         </el-form-item>
       </el-form>
-      <!--      <template slot-scope="scope">-->
       <span slot="footer" class="dialog-footer">
             <el-button @click="dialogUpdate = false">Cancel</el-button>
             <el-button type="primary" @click="doUpdate()">Revise</el-button>
         </span>
-      <!--      </template>-->
     </el-dialog>
   </div>
 </template>
@@ -170,16 +168,12 @@ export default {
     },
     doUpdate(){
       console.log(this.checkApplyInFormation);
-      // this.$refs['checkApplyInFormation'].validate(valid => {
-      //   if(valid){
           this.$axios.post('/input/updateCheckApply', this.checkApplyInFormation).then((resp) => {
             console.log('checkApplyInFormation=', this.checkApplyInFormation)
           }).catch((err) => {
             console.log("err", err);
           })
           this.dialogUpdate = false;
-      //   }
-      // })
     },
     doGet(data){
       this.dialogUpdate=true;

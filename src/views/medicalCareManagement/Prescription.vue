@@ -1,661 +1,645 @@
 <template>
-   <div>
-     <div>
-       <el-row :gutter="20">
-         <el-col :span="6">
-           <el-card shadow="hover">
-             <div>
-               <el-dropdown @command="handleCommand">
-                 <span class="el-dropdown-link">
-                   Query type<i class="el-icon-arrow-down el-icon--right"></i>
-                 </span>
-                 <el-dropdown-menu slot="dropdown">
-                   <el-dropdown-item command="a">Name</el-dropdown-item>
-                   <el-dropdown-item command="b">Medical record number</el-dropdown-item>
-                 </el-dropdown-menu>
-               </el-dropdown>
-               <el-form :model="searchPatient" :rules="searchPatientRules" ref="searchPatient">
-                 <el-form-item :prop="prop">
-                   <el-input v-if="searchByName===true" v-model="searchPatient.RealName" placeholder="Please enter the patient's name to query" style="width: 200px;margin-right: 10px" prefix-icon ="el-icon-question" clearable></el-input>
-                   <el-input v-else v-model="searchPatient.CaseNumber" placeholder="Please enter the patient's medical record number to query" style="width: 200px;margin-right: 10px" prefix-icon="el-icon-question " clearable></el-input>
-                   <el-button-group>
-                     <el-button icon="el-icon-search" size="small" type="primary" @click="search('searchPatient')">Query</el-button>
-                     <el-button icon="el-icon-refresh" size="small" type="info" @click="reset('searchPatient')">Reset</el-button>
-                   </el-button-group>
-                 </el-form-item>
-               </el-form>
-             </div>
-             <div>
-               <el-divider content-position="left"></el-divider>
-             </div>
-             <el-empty description="No patient selected yet" v-if="!isChoose"></el-empty>
-             <el-collapse-transition>
-               <div v-show="isChoose">
-                 <el-descriptions size="mini" title="Basic patient information" direction="vertical" :column="4" border>
-                   <el-descriptions-item label="Name" :span="2">{{choosedPatient.RealName}}</el-descriptions-item>
-                   <el-descriptions-item label="Medical Record Number" :span="2">{{choosedPatient.CaseNumber}}</el-descriptions-item>
-                   <el-descriptions-item label="Gender" :span="2" v-if="choosedPatient.Gender===71"><el-tag type="success">Male</el-tag></ el-descriptions-item>
-                   <el-descriptions-item label="Gender" :span="2" v-else><el-tag type="warning">Female</el-tag></el-descriptions-item>
-                   <el-descriptions-item label="Age" :span="2">{{choosedPatient.Age}}</el-descriptions-item>
-                 </el-descriptions>
-               </div>
-             </el-collapse-transition>
-           </el-card>
-         </el-col>
-         <el-col :span="8">
-           <el-card shadow="hover">
-             <div>
-               <span>Patients awaiting prescription</span>
-               <el-table :data="patientData"
-                         stripe
-                         border
-                         :default-sort = "{prop: 'date', order: 'descending'}"
-                         v-loading="loading"
-                         max-height="250"
-                         min-height="250"
-                         element-loading-text="Loading..."
-                         element-loading-spinner="el-icon-loading"
-                         element-loading-background="rgba(0, 0, 0, 0.8)"
-                         style="width: 361px">
-                 <el-table-column align="center" prop="caseNumber" label="Medical Record Number" width="90"></el-table-column>
-                 <el-table-column align="center" prop="realName" label="Name" width="90"></el-table-column>
-                 <el-table-column align="center" prop="age" label="age" width="90"></el-table-column>
-                 <el-table-column align="center" fixed="right" label="Operation" width="90">
-                   <template slot-scope="scope">
-                     <el-tooltip class="item" effect="dark" content="Select this patient and issue a prescription" placement="right">
-                       <el-button type="text" size="mini" @click="choosePatient(scope.row)">Choose</el-button>
-                     </el-tooltip>
-
-                   </template>
-                 </el-table-column>
-               </el-table>
-               <div style="display: flex;justify-content: flex-end">
-                 <el-pagination
-                     background
-                     @current-change="currentChangeForPatient"
-                     @size-change="sizeChangeForPatient"
-                     :page-size="pageSizeForPatient"
-
-                     :current-page.sync="currentPageForPatient"
-                     layout="prev, pager, next, jumper, ->, total, slot"
-                     :total="patients.length">
-                 </el-pagination>
-               </div>
-             </div>
-           </el-card>
-         </el-col>
-         <el-col :span="10">
-           <el-card shadow="hover">
-             <el-empty description="No prescription details selected yet" v-if="!isChooseDetail"></el-empty>
-             <el-collapse-transition>
-               <div v-show="isChooseDetail">
-                 <div>
-                   <el-empty description="No details selected yet" v-if="!isChooseDetail"></el-empty><el-collapse-transition>
-                     <div v-show="isChooseDetail">
-                       <el-radio-group v-model="templateRadio">
-                         <el-radio :label="1" @change="initTemplate">Whole Hospital</el-radio>
-                         <el-radio :label="2" @change="initTemplate">Department</el-radio>
-                         <el-radio :label="3" @change="initTemplate">Personal</el-radio>
-                       </el-radio-group>
-                       <div>
-                         <span>Pharmaceutical Template Table</span>
-                         <el-button :disabled="templateRadio===0" type="success" size="mini" @click="addTemplate" style="margin-left: 30px; margin-bottom: 5px" icon="el- icon-plus"></el-button>
-                       </div>
-                       <el-empty description="No template range selected yet" v-if="!isChooseTemplate"></el-empty>
-                       <el-collapse-transition>
-                         <div v-show="isChooseTemplate">
-                           <el-table :data="drugsTemplateData"
-                                     stripe
-                                     border
-                                     :default-sort = "{prop: 'date', order: 'descending'}"
-                                     v-loading="templateLoading"
-                                     max-height="250"
-                                     min-height="250"
-                                     element-loading-text="Loading..."
-                                     element-loading-spinner="el-icon-loading"
-                                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                                     style="width: 100%">
-                             <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
-                             <el-table-column align="center" prop="name" label="name" width="100" show-overflow-tooltip>
-                               <template slot-scope="scope">
-                                 <el-tag type="danger" size="mini">{{scope.row.name}}</el-tag>
-                               </template>
-                             </el-table-column>
-                             <el-table-column align="center" prop="userID" label="Doctor ID" width="50" show-overflow-tooltip></el-table-column>
-                             <el-table-column align="center" prop="creationTime" label="Creation Time" width="75" show-overflow-tooltip></el-table-column>
-                             <el-table-column align="center" prop="scope" label="Use scope" width="75" show-overflow-tooltip>
-                               <template slot-scope="scope">
-                                 <el-tag v-if="scope.row.scope === 'Whole Hospital'" type="danger" size="mini">{{scope.row.scope}}</el-tag>
-                                 <el-tag v-if="scope.row.scope === 'Department'" type="warning" size="mini">{{scope.row.scope}}</el-tag>
-                                 <el-tag v-if="scope.row.scope === 'Personal'" type="success" size="mini">{{scope.row.scope}}</el-tag>
-                               </template>
-                             </el-table-column>
-                             <el-table-column align="center" fixed="right" label="Operation" width="100" show-overflow-tooltip>
-                               <template slot-scope="scope">
-                                 <el-button-group>
-                                   <div>
-                                     <el-tooltip class="item" effect="dark" content="Select this template and view template details" placement="right">
-                                       <el-button type="text" size="mini" @click="chooseTemplate(scope.row)">Choose</el-button>
-                                     </el-tooltip>
-                                     <el-divider direction="vertical"></el-divider>
-                                     <el-button type="text" size="mini" @click="deleteTemplate(scope.row)">Delete</el-button>
-                                   </div>
-                                 </el-button-group>
-                               </template>
-                             </el-table-column>
-                           </el-table>
-                         </div>
-                       </el-collapse-transition>
-                     </div>
-                   </el-collapse-transition>
-                 </div>
-                 <div>
-                   <el-divider content-position="center"></el-divider>
-                 </div>
-                 <div>
-                   <el-empty description="No template selected yet" v-if="(!isChooseTemplateDetail) && (isChooseDetail) && (isChooseTemplate)" style="height: 200px"></el-empty>
-                   <el-collapse-transition>
-                     <div v-show="isChooseTemplateDetail">
-                       <div>
-                         <span>Pharmaceutical Template Details</span>
-                         <el-button size="mini" style="margin-left: 10px" type="success" @click="addTemplateDetailDialogVisible = true" icon="el-icon-plus"></el-button>
-                       </div>
-                       <el-table :data="drugsTemplateDetailData"
-                                 stripeborder
-                                 :default-sort = "{prop: 'date', order: 'descending'}"
-                                 v-loading="templateDetailLoading"
-                                 max-height="250"
-                                 min-height="250"
-                                 element-loading-text="Loading..."
-                                 element-loading-spinner="el-icon-loading"
-                                 element-loading-background="rgba(0, 0, 0, 0.8)"
-                                 style="width: 100%">
-                         <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" prop="drugsTempID" label="drug template ID" width="50" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" prop="drugsID" label="Drug ID" width="50" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" prop="drugsUsage" label="usage" width="60" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" prop="dosage" label="Dosage" width="75" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" prop="frequency" label="frequency" width="75" show-overflow-tooltip></el-table-column>
-                         <el-table-column align="center" fixed="right" label="Operation" width="100" show-overflow-tooltip>
-                           <template slot-scope="scope">
-                             <el-button-group>
-                               <div>
-                                 <el-tooltip class="item" effect="dark" content="Select this template detail and apply" placement="right">
-                                   <el-button type="text" size="mini" @click="applyTemplateDetail(scope.row)">Apply</el-button>
-                                 </el-tooltip>
-                                 <el-divider direction="vertical"></el-divider>
-                                 <el-button type="text" size="mini" @click="deleteTemplateDetail(scope.row)">Delete</el-button>
-                               </div>
-                             </el-button-group>
-                           </template>
-                         </el-table-column>
-                       </el-table>
-                     </div>
-                   </el-collapse-transition>
-                 </div>
-               </div>
-             </el-collapse-transition>
-           </el-card>
-         </el-col>
-       </el-row>
-       <el-row>
-         <el-col :span="15">
-           <el-card shadow="hover">
-             <el-empty description="No patient selected yet" v-if="!isChoose"></el-empty>
-             <el-collapse-transition>
-               <div v-show="isChoose">
-                 <div>
-                   <span>Patient prescription list</span>
-                   <el-button size="mini" style="margin-left: 10px" type="success" @click="addDialogVisible = true" icon="el-icon-plus"></el-button>
-                 </div>
-                 <el-table :data="prescriptionData"
-                           stripe
-                           border
-                           :default-sort = "{prop: 'date', order: 'descending'}"
-                           v-loading="prescriptionLoading"
-                           max-height="250"
-                           min-height="250"
-                           element-loading-text="Loading..."
-                           element-loading-spinner="el-icon-loading"
-                           element-loading-background="rgba(0, 0, 0, 0.8)"
-                           style="width: 100%">
-                   <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="medicalID" label="Medical ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="registID" label="registration ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="userID" label="Doctor ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="prescriptionName" label="Prescription Name" width="90" show-overflow-tooltip>
-                     <template slot-scope="scope">
-                       <el-tag type="primary" size="mini">{{scope.row.prescriptionName}}</el-tag>
-                     </template>
-                   </el-table-column>
-                   <el-table-column align="center" prop="prescriptionTime" label="Prescription Time" width="90" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="prescriptionState" label="prescription state" width="90" :formatter="applyState" show-overflow-tooltip>
-                     <template slot-scope="scope">
-                       <el-tag v-if="scope.row.prescriptionState === 1" type="primary" size="mini">Temporary storage</el-tag>
-                       <el-tag v-if="scope.row.prescriptionState === 3" type="success" size="mini">Sent</el-tag>
-                       <el-tag v-if="scope.row.prescriptionState === 4" type="warning" size="mini">Deleted</el-tag>
-                       <el-tag v-if="scope.row.prescriptionState === 0" type="danger" size="mini">Obsolete</el-tag>
-                     </template>
-                   </el-table-column>
-                   <el-table-column align="center" fixed="right" label="Operation" style="width: 100%">
-                     <template slot-scope="scope">
-                       <el-button-group>
-                         <div>
-                           <el-button style="color: #89e250" v-if="!(scope.row.prescriptionState===3)" :disabled="scope.row.prescriptionState===3" type="text" size ="mini" @click="tempPrescription(scope.row)">Temporarily</el-button>
-                           <el-button v-else :disabled="scope.row.prescriptionState===3" type="text" size="mini" @click="tempPrescription(scope.row)">Temporary storage</el-button >
-                           <el-divider direction="vertical"></el-divider>
-                           <el-button style="color: #e2cf1c" v-if="!(scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4 )" :disabled="scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4" type="text" size="mini" @click ="sendPrescription(scope.row)">Send</el-button>
-                           <el-button v-else :disabled="scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4" type="text" size= "mini" @click="sendPrescription(scope.row)">Send</el-button>
-                           <el-divider direction="vertical"></el-divider>
-                           <el-button style="color: #fa7b0c" v-if="!(scope.row.prescriptionState===3)" :disabled="scope.row.prescriptionState===3" type="text" size ="mini" @click="deletePrescription(scope.row)">Delete</el-button>
-                           <el-button v-else :disabled="scope.row.prescriptionState===3" type="text" size="mini" @click="deletePrescription(scope.row)">Delete</el-button>
-                           <el-divider direction="vertical"></el-divider>
-                           <el-button style="color: #fa0707" v-if="!(scope.row.prescriptionState!==3)" :disabled="scope.row.prescriptionState!==3" type="text" size ="mini" @click="cancelPrescription(scope.row)">Cancel</el-button>
-                           <el-button v-else :disabled="scope.row.prescriptionState!==3" type="text" size="mini" @click="cancelPrescription(scope.row)">Void</el-button>
-                           <el-divider direction="vertical"></el-divider>
-                           <el-tooltip class="item" effect="dark" content="Select this prescription and display prescription details" placement="right">
-                             <el-button type="text" size="mini" @click="chooseDetail(scope.row)">Details</el-button>
-                           </el-tooltip>
-                         </div>
-
-                       </el-button-group>
-                     </template>
-                   </el-table-column>
-                 </el-table>
-                 <el-pagination
-                     @size-change="sizeChange"
-                     @current-change="currentChange"
-                     background
-
-                     :current-page="currentPage"
-                     :page-sizes="[5, 10, 20, 50]"
-                     :page-size="pageSize"
-                     :current-page.sync="currentPage"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="prescription.length">
-                 </el-pagination>
-
-               </div>
-             </el-collapse-transition>
-           </el-card>
-         </el-col>
-         <el-col :span="9">
-           <el-card shadow="hover">
-             <el-empty description="No prescription details selected yet" v-if="!isChooseDetail"></el-empty>
-             <el-collapse-transition>
-               <div v-show="isChooseDetail">
-                 <div>
-                   <span>Patient prescription list</span>
-                   <el-button size="mini" style="margin-left: 10px" type="success" @click="addDrugDialogVisible = true" icon="el-icon-plus"></el-button>
-                 </div>
-                 <el-table
-                     :data="detailData"
-                     stripe
-                     border
-                     :default-sort = "{prop: 'date', order: 'descending'}"
-                     v-loading="detailLoading"
-                     max-height="250"
-                     min-height="250"
-                     element-loading-text="Loading..."
-                     element-loading-spinner="el-icon-loading"
-                     element-loading-background="rgba(0, 0, 0, 0.8)"
-                     style="width: 100%">
-                   <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="prescriptionID" label="Prescription ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="drugsID" label="Drug ID" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="drugsName" labell="drug name" width="100" show-overflow-tooltip>
-                     <template slot-scope="scope">
-                       <el-tag type="primary" size="mini">{{scope.row.drugsName}}</el-tag>
-                     </template>
-                   </el-table-column>
-                   <el-table-column align="center" prop="drugsUsage" label="usage" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="dosage" label="Dosage" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="frequency" label="frequency" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="amount" label="amount" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" prop="state" label="state" width="50" show-overflow-tooltip></el-table-column>
-                   <el-table-column align="center" fixed="right" label="Operation" width="50">
-                     <template slot-scope="scope">
-                       <el-button-group>
-                         <el-button style="color: #ff0000" type="text" size="mini" @click="deleteDrugs(scope.row)">Delete Drug</el-button>
-                       </el-button-group>
-                     </template>
-                   </el-table-column>
-                 </el-table>
-               </div>
-             </el-collapse-transition>
-           </el-card>
-         </el-col>
-       </el-row>
-     </div>
-     <div>
-       <el-dialog title="Add prescription" :visible.sync="addDialogVisible" width="80%">
-         <el-form :model="addPrescriptionForm" :rules="addPrescriptionFormRules" ref="addPrescriptionForm" width="80%">
-           <el-descriptions class="margin-top" :column="3" size="small" border>
-             <el-descriptions-item label="Prescription name">
-               <template>
-                 <el-form-item prop="prescriptionName">
-                   <el-input v-model="addPrescriptionForm.prescriptionName" placeholder="Please enter the prescription name" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="Opening time">
-               <template>
-                 <el-form-item prop="prescriptionTime">
-                   <el-date-picker
-                       v-model="addPrescriptionForm.prescriptionTime"
-                       type="datetime"
-                       placeholder="Select opening time"
-                       default-time="12:00:00">
-                   </el-date-picker>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-           </el-descriptions>
-         </el-form>
-         <div slot="footer" class="dialog-footer">
-           <el-button-group>
-             <el-button type="info" @click="resetPrescription('addPrescriptionForm')" icon="el-icon-refresh">Reset</el-button>
-             <el-button type="primary" @click="addDialogVisible = false; resetPrescription('addPrescriptionForm')" icon="el-icon-close">Cancel</el-button>
-             <el-button type="success" @click="addPrescription('addPrescriptionForm')" icon="el-icon-plus">Add</el-button>
-           </el-button-group>
-
-         </div>
-       </el-dialog>
-       <el-dialog title="Add Drug" :visible.sync="addDrugDialogVisible" width="80%">
-         <el-form :model="addDrugForm" :rules="addDrugFormRules" ref="addDrugForm" width="80%">
-           <el-descriptions class="margin-top" :column="3" size="small" border>
-             <el-descriptions-item label="drug name">
-               <template>
-                 <el-form-item prop="drugsName">
-                   <el-tooltip placement="top">
-                     <div slot="content">Select and enter keywords to search<br/>Support fuzzy search</div>
-                     <el-select
-                         v-model="drugsValue"
-                         filterable
-                         size="mini"
-                         style="width: 100px"
-                         remote
-                         clearable
-                         loading-text="Loading..."
-                         reserve-keyword
-                         placeholder="Please enter drug keywords"
-                         :remote-method="remoteMethod"
-                         :loading="drugsLoading">
-                       <el-option
-                           v-for="item in drugsOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                       </el-option>
-                     </el-select>
-                   </el-tooltip>
-
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-
-             <el-descriptions-item label="usage">
-               <template>
-                 <el-form-item prop="drugsUsage">
-                   <el-input v-model="addDrugForm.drugsUsage" placeholder="Please enter usage" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="Dosage">
-               <template>
-                 <el-form-item prop="dosage">
-                   <el-input v-model="addDrugForm.dosage" placeholder="Please enter the dosage" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="frequency">
-               <template>
-                 <el-form-item prop="frequency">
-                   <el-input v-model="addDrugForm.frequency" placeholder="Please enter frequency" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="quantity">
-               <template>
-                 <el-form-item prop="amount">
-                   <el-input-number v-model="addDrugForm.amount" :min="1" label="Please enter the amount"></el-input-number>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-           </el-descriptions>
-         </el-form>
-         <div slot="footer" class="dialog-footer">
-           <el-button-group>
-             <el-button type="info" @click="resetDrug('addDrugForm')" icon="el-icon-refresh">Reset</el-button>
-             <el-button type="primary" @click="addDrugDialogVisible = false; resetDrug('addDrugForm')" icon="el-icon-close">Cancel</el-button>
-             <el-button type="success" @click="addDrugs('addDrugForm')" icon="el-icon-plus">Add</el-button>
-           </el-button-group>
-
-         </div>
-       </el-dialog>
-       <el-dialog title="Add Drug Template" :visible.sync="addTemplateDialogVisible" width="80%">
-         <el-form :model="addTemplateForm" :rules="addTemplateFormRules" ref="addTemplateForm" width="80%">
-           <el-descriptions class="margin-top" :column="3" size="small" border>
-             <el-descriptions-item label="template name">
-               <template>
-                 <el-form-item prop="name">
-                   <el-input v-model="addTemplateForm.name" placeholder="Please enter the template name" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-
-             <el-descriptions-item label="Creation time">
-               <template>
-                 <el-form-item prop="creationTime">
-                   <el-date-picker
-                       v-model="addTemplateForm.creationTime"
-                       type="datetime"
-                       placeholder="Select opening time"
-                       default-time="12:00:00">
-                   </el-date-picker>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="Scope of use">
-               <template>
-                 <el-form-item prop="scope">
-                   <el-select v-model="addTemplateForm.scope" placeholder="Please select the scope" clearable>
-                     <el-option label="Whole Hospital" value="Whole Hospital"></el-option>
-                     <el-option label="Department" value="Department"></el-option>
-                     <el-option label="Personal" value="Personal"></el-option>
-                   </el-select>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-
-           </el-descriptions>
-         </el-form>
-         <div slot="footer" class="dialog-footer">
-           <el-button-group>
-             <el-button type="info" @click="resetTemplate('addTemplateForm')" icon="el-icon-refresh">Reset</el-button>
-             <el-button type="primary" @click="addTemplateDialogVisible = false; resetTemplate('addTemplateForm')" icon="el-icon-close">Cancel</el-button>
-             <el-button type="success" @click="addTemplateConfirm('addTemplateForm')" icon="el-icon-plus">Add</el-button>
-           </el-button-group>
-
-         </div>
-       </el-dialog>
-       <el-dialog title="Add patent medicine detail template" :visible.sync="addTemplateDetailDialogVisible" width="80%">
-         <el-form :model="addTemplateDetailForm" :rules="addTemplateDetailFormRules" ref="addTemplateDetailForm" width="80%">
-           <el-descriptions class="margin-top" :column="3" size="small" border>
-             <el-descriptions-item label="drug name">
-               <template>
-                 <el-form-item prop="drugsName">
-                   <el-tooltip placement="top">
-                     <div slot="content">Select and enter keywords to search<br/>Support fuzzy search</div>
-                     <el-select
-                         v-model="drugsValue"
-                         filterable
-                         size="mini"
-                         style="width: 100px"
-                         remote
-                         clearable
-                         loading-text="Loading..."
-                         reserve-keyword
-                         placeholder="Please enter drug keywords"
-                         :remote-method="remoteMethod"
-                         :loading="drugsLoading">
-                       <el-option
-                           v-for="item in drugsOptions"
-                           :key="item.value"
-                           :label="item.label"
-                           :value="item.value">
-                       </el-option>
-                     </el-select>
-                   </el-tooltip>
-
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="usage">
-               <template>
-                 <el-form-item prop="drugsUsage">
-                   <el-input v-model="addTemplateDetailForm.drugsUsage" placeholder="Please enter usage" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-
-             <el-descriptions-item label="Dosage">
-               <template>
-                 <el-form-item prop="dosage">
-                   <el-input v-model="addTemplateDetailForm.dosage" placeholder="Please enter the dosage" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-             <el-descriptions-item label="frequency">
-               <template>
-                 <el-form-item prop="frequency">
-                   <el-input v-model="addTemplateDetailForm.frequency" placeholder="Please enter frequency" clearable></el-input>
-                 </el-form-item>
-               </template>
-             </el-descriptions-item>
-
-           </el-descriptions>
-         </el-form>
-         <div slot="footer" class="dialog-footer">
-           <el-button-group>
-             <el-button type="info" @click="resetTemplateDetail('addTemplateDetailForm')" icon="el-icon-refresh">Reset</el-button>
-             <el-button type="primary" @click="addTemplateDetailDialogVisible = false; resetTemplateDetail('addTemplateDetailForm')" icon="el-icon-close">Cancel</el-button>
-             <el-button type="success" @click="addTemplateDetailConfirm('addTemplateDetailForm')" icon="el-icon-plus">Add</el-button>
-           </el-button-group>
-
-         </div>
-       </el-dialog>
-     </div>
-   </div>
+    <div>
+      <div>
+        <el-row :gutter="20">
+          <el-col :span="6">
+            <el-card shadow="hover">
+              <div>
+                <el-dropdown @command="handleCommand">
+                  <span class="el-dropdown-link">
+                    Query type<i class="el-icon-arrow-down el-icon--right"></i>
+                  </span>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="a">Name</el-dropdown-item>
+                    <el-dropdown-item command="b">Medical record number</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+                <el-form :model="searchPatient" :rules="searchPatientRules" ref="searchPatient">
+                  <el-form-item :prop="prop">
+                    <el-input v-if="searchByName===true" v-model="searchPatient.RealName" placeholder="Please enter the patient's name to query" style="width: 200px;margin-right: 10px" prefix-icon ="el-icon-question" clearable></el-input>
+                    <el-input v-else v-model="searchPatient.CaseNumber" placeholder="Please enter the patient's medical record number to query" style="width: 200px;margin-right: 10px" prefix-icon="el-icon-question " clearable></el-input>
+                    <el-button-group>
+                      <el-button icon="el-icon-search" size="small" type="primary" @click="search('searchPatient')">Query</el-button>
+                      <el-button icon="el-icon-refresh" size="small" type="info" @click="reset('searchPatient')">Reset</el-button>
+                    </el-button-group>
+                  </el-form-item>
+                </el-form>
+              </div>
+              <div>
+                <el-divider content-position="left"></el-divider>
+              </div>
+              <el-empty description="No patient selected yet" v-if="!isChoose"></el-empty>
+              <el-collapse-transition>
+                <div v-show="isChoose">
+                  <el-descriptions size="mini" title="Basic patient information" direction="vertical" :column="4" border>
+                    <el-descriptions-item label="Name" :span="2">{{choosedPatient.RealName}}</el-descriptions-item>
+                    <el-descriptions-item label="Medical Record Number" :span="2">{{choosedPatient.CaseNumber}}</el-descriptions-item>
+                    <el-descriptions-item label="Gender" :span="2" v-if="choosedPatient.Gender===71"><el-tag type="success">Male</el-tag></el-descriptions-item>
+                    <el-descriptions-item label="Gender" :span="2" v-else><el-tag type="warning">Female</el-tag></el-descriptions-item>
+                    <el-descriptions-item label="Age" :span="2">{{choosedPatient.Age}}</el-descriptions-item>
+                  </el-descriptions>
+                </div>
+              </el-collapse-transition>
+            </el-card>
+          </el-col>
+          <el-col :span="8">
+            <el-card shadow="hover">
+              <div>
+                <span>Patients awaiting prescription</span>
+                <el-table :data="patientData"
+                          stripe
+                          border
+                          :default-sort = "{prop: 'date', order: 'descending'}"
+                          v-loading="loading"
+                          max-height="250"
+                          min-height="250"
+                          element-loading-text="Loading..."
+                          element-loading-spinner="el-icon-loading"
+                          element-loading-background="rgba(0, 0, 0, 0.8)"
+                          style="width: 361px">
+                  <el-table-column align="center" prop="caseNumber" label="Medical Record Number" width="90"></el-table-column>
+                  <el-table-column align="center" prop="realName" label="Name" width="90"></el-table-column>
+                  <el-table-column align="center" prop="age" label="age" width="90"></el-table-column>
+                  <el-table-column align="center" fixed="right" label="Operation" width="90">
+                    <template slot-scope="scope">
+                      <el-tooltip class="item" effect="dark" content="Select this patient and issue a prescription" placement="right">
+                        <el-button type="text" size="mini" @click="choosePatient(scope.row)">Choose</el-button>
+                      </el-tooltip>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <div style="display: flex;justify-content: flex-end">
+                  <el-pagination
+                      background
+                      @current-change="currentChangeForPatient"
+                      @size-change="sizeChangeForPatient"
+                      :page-size="pageSizeForPatient"
+                      :current-page.sync="currentPageForPatient"
+                      layout="prev, pager, next, jumper, ->, total, slot"
+                      :total="patients.length">
+                  </el-pagination>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="10">
+            <el-card shadow="hover">
+              <el-empty description="No prescription details selected yet" v-if="!isChooseDetail"></el-empty>
+              <el-collapse-transition>
+                <div v-show="isChooseDetail">
+                  <div>
+                    <el-empty description="No details selected yet" v-if="!isChooseDetail"></el-empty><el-collapse-transition>
+                      <div v-show="isChooseDetail">
+                        <el-radio-group v-model="templateRadio">
+                          <el-radio :label="1" @change="initTemplate">Whole Hospital</el-radio>
+                          <el-radio :label="2" @change="initTemplate">Department</el-radio>
+                          <el-radio :label="3" @change="initTemplate">Personal</el-radio>
+                        </el-radio-group>
+                        <div>
+                          <span>Pharmaceutical Template Table</span>
+                          <el-button :disabled="templateRadio===0" type="success" size="mini" @click="addTemplate" style="margin-left: 30px; margin-bottom: 5px" icon="el- icon-plus"></el-button>
+                        </div>
+                        <el-empty description="No template range selected yet" v-if="!isChooseTemplate"></el-empty>
+                        <el-collapse-transition>
+                          <div v-show="isChooseTemplate">
+                            <el-table :data="drugsTemplateData"
+                                      stripe
+                                      border
+                                      :default-sort = "{prop: 'date', order: 'descending'}"
+                                      v-loading="templateLoading"
+                                      max-height="250"
+                                      min-height="250"
+                                      element-loading-text="Loading..."
+                                      element-loading-spinner="el-icon-loading"
+                                      element-loading-background="rgba(0, 0, 0, 0.8)"
+                                      style="width: 100%">
+                              <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
+                              <el-table-column align="center" prop="name" label="name" width="100" show-overflow-tooltip>
+                                <template slot-scope="scope">
+                                  <el-tag type="danger" size="mini">{{scope.row.name}}</el-tag>
+                                </template>
+                              </el-table-column>
+                              <el-table-column align="center" prop="userID" label="Doctor ID" width="50" show-overflow-tooltip></el-table-column>
+                              <el-table-column align="center" prop="creationTime" label="Creation Time" width="75" show-overflow-tooltip></el-table-column>
+                              <el-table-column align="center" prop="scope" label="Use scope" width="75" show-overflow-tooltip>
+                                <template slot-scope="scope">
+                                  <el-tag v-if="scope.row.scope === 'Whole Hospital'" type="danger" size="mini">{{scope.row.scope}}</el-tag>
+                                  <el-tag v-if="scope.row.scope === 'Department'" type="warning" size="mini">{{scope.row.scope}}</el-tag>
+                                  <el-tag v-if="scope.row.scope === 'Personal'" type="success" size="mini">{{scope.row.scope}}</el-tag>
+                                </template>
+                              </el-table-column>
+                              <el-table-column align="center" fixed="right" label="Operation" width="100" show-overflow-tooltip>
+                                <template slot-scope="scope">
+                                  <el-button-group>
+                                    <div>
+                                      <el-tooltip class="item" effect="dark" content="Select this template and view template details" placement="right">
+                                        <el-button type="text" size="mini" @click="chooseTemplate(scope.row)">Choose</el-button>
+                                      </el-tooltip>
+                                      <el-divider direction="vertical"></el-divider>
+                                      <el-button type="text" size="mini" @click="deleteTemplate(scope.row)">Delete</el-button>
+                                    </div>
+                                  </el-button-group>
+                                </template>
+                              </el-table-column>
+                            </el-table>
+                          </div>
+                        </el-collapse-transition>
+                      </div>
+                    </el-collapse-transition>
+                  </div>
+                  <div>
+                    <el-divider content-position="center"></el-divider>
+                  </div>
+                  <div>
+                    <el-empty description="No template selected yet" v-if="(!isChooseTemplateDetail) && (isChooseDetail) && (isChooseTemplate)" style="height: 200px"></el-empty>
+                    <el-collapse-transition>
+                      <div v-show="isChooseTemplateDetail">
+                        <div>
+                          <span>Pharmaceutical Template Details</span>
+                          <el-button size="mini" style="margin-left: 10px" type="success" @click="addTemplateDetailDialogVisible = true" icon="el-icon-plus"></el-button>
+                        </div>
+                        <el-table :data="drugsTemplateDetailData"
+                                  stripeborder
+                                  :default-sort = "{prop: 'date', order: 'descending'}"
+                                  v-loading="templateDetailLoading"
+                                  max-height="250"
+                                  min-height="250"
+                                  element-loading-text="Loading..."
+                                  element-loading-spinner="el-icon-loading"
+                                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                                  style="width: 100%">
+                          <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" prop="drugsTempID" label="drug template ID" width="50" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" prop="drugsID" label="Drug ID" width="50" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" prop="drugsUsage" label="usage" width="60" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" prop="dosage" label="Dosage" width="75" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" prop="frequency" label="frequency" width="75" show-overflow-tooltip></el-table-column>
+                          <el-table-column align="center" fixed="right" label="Operation" width="100" show-overflow-tooltip>
+                            <template slot-scope="scope">
+                              <el-button-group>
+                                <div>
+                                  <el-tooltip class="item" effect="dark" content="Select this template detail and apply" placement="right">
+                                    <el-button type="text" size="mini" @click="applyTemplateDetail(scope.row)">Apply</el-button>
+                                  </el-tooltip>
+                                  <el-divider direction="vertical"></el-divider>
+                                  <el-button type="text" size="mini" @click="deleteTemplateDetail(scope.row)">Delete</el-button>
+                                </div>
+                              </el-button-group>
+                            </template>
+                          </el-table-column>
+                        </el-table>
+                      </div>
+                    </el-collapse-transition>
+                  </div>
+                </div>
+              </el-collapse-transition>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="15">
+            <el-card shadow="hover">
+              <el-empty description="No patient selected yet" v-if="!isChoose"></el-empty>
+              <el-collapse-transition>
+                <div v-show="isChoose">
+                  <div>
+                    <span>Patient prescription list</span>
+                    <el-button size="mini" style="margin-left: 10px" type="success" @click="addDialogVisible = true" icon="el-icon-plus"></el-button>
+                  </div>
+                  <el-table :data="prescriptionData"
+                            stripe
+                            border
+                            :default-sort = "{prop: 'date', order: 'descending'}"
+                            v-loading="prescriptionLoading"
+                            max-height="250"
+                            min-height="250"
+                            element-loading-text="Loading..."
+                            element-loading-spinner="el-icon-loading"
+                            element-loading-background="rgba(0, 0, 0, 0.8)"
+                            style="width: 100%">
+                    <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="medicalID" label="Medical ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="registID" label="registration ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="userID" label="Doctor ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="prescriptionName" label="Prescription Name" width="90" show-overflow-tooltip>
+                      <template slot-scope="scope">
+                        <el-tag type="primary" size="mini">{{scope.row.prescriptionName}}</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="prescriptionTime" label="Prescription Time" width="90" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="prescriptionState" label="prescription state" width="90" :formatter="applyState" show-overflow-tooltip>
+                      <template slot-scope="scope">
+                        <el-tag v-if="scope.row.prescriptionState === 1" type="primary" size="mini">Temporary storage</el-tag>
+                        <el-tag v-if="scope.row.prescriptionState === 3" type="success" size="mini">Sent</el-tag>
+                        <el-tag v-if="scope.row.prescriptionState === 4" type="warning" size="mini">Deleted</el-tag>
+                        <el-tag v-if="scope.row.prescriptionState === 0" type="danger" size="mini">Obsolete</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" fixed="right" label="Operation" style="width: 100%">
+                      <template slot-scope="scope">
+                        <el-button-group>
+                          <div>
+                            <el-button style="color: #89e250" v-if="!(scope.row.prescriptionState===3)" :disabled="scope.row.prescriptionState===3" type="text" size ="mini" @click="tempPrescription(scope.row)">Temporarily</el-button>
+                            <el-button v-else :disabled="scope.row.prescriptionState===3" type="text" size="mini" @click="tempPrescription(scope.row)">Temporary storage</el-button >
+                            <el-divider direction="vertical"></el-divider>
+                            <el-button style="color: #e2cf1c" v-if="!(scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4 )" :disabled="scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4" type="text" size="mini" @click ="sendPrescription(scope.row)">Send</el-button>
+                            <el-button v-else :disabled="scope.row.prescriptionState===3 || scope.row.prescriptionState===0 || scope.row.prescriptionState===4" type="text" size= "mini" @click="sendPrescription(scope.row)">Send</el-button>
+                            <el-divider direction="vertical"></el-divider>
+                            <el-button style="color: #fa7b0c" v-if="!(scope.row.prescriptionState===3)" :disabled="scope.row.prescriptionState===3" type="text" size ="mini" @click="deletePrescription(scope.row)">Delete</el-button>
+                            <el-button v-else :disabled="scope.row.prescriptionState===3" type="text" size="mini" @click="deletePrescription(scope.row)">Delete</el-button>
+                            <el-divider direction="vertical"></el-divider>
+                            <el-button style="color: #fa0707" v-if="!(scope.row.prescriptionState!==3)" :disabled="scope.row.prescriptionState!==3" type="text" size ="mini" @click="cancelPrescription(scope.row)">Cancel</el-button>
+                            <el-button v-else :disabled="scope.row.prescriptionState!==3" type="text" size="mini" @click="cancelPrescription(scope.row)">Void</el-button>
+                            <el-divider direction="vertical"></el-divider>
+                            <el-tooltip class="item" effect="dark" content="Select this prescription and display prescription details" placement="right">
+                              <el-button type="text" size="mini" @click="chooseDetail(scope.row)">Details</el-button>
+                            </el-tooltip>
+                          </div>
+                        </el-button-group>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                  <el-pagination
+                      @size-change="sizeChange"
+                      @current-change="currentChange"
+                      background
+                      :current-page="currentPage"
+                      :page-sizes="[5, 10, 20, 50]"
+                      :page-size="pageSize"
+                      :current-page.sync="currentPage"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :total="prescription.length">
+                  </el-pagination>
+                </div>
+              </el-collapse-transition>
+            </el-card>
+          </el-col>
+          <el-col :span="9">
+            <el-card shadow="hover">
+              <el-empty description="No prescription details selected yet" v-if="!isChooseDetail"></el-empty>
+              <el-collapse-transition>
+                <div v-show="isChooseDetail">
+                  <div>
+                    <span>Patient prescription list</span>
+                    <el-button size="mini" style="margin-left: 10px" type="success" @click="addDrugDialogVisible = true" icon="el-icon-plus"></el-button>
+                  </div>
+                  <el-table
+                      :data="detailData"
+                      stripe
+                      border
+                      :default-sort = "{prop: 'date', order: 'descending'}"
+                      v-loading="detailLoading"
+                      max-height="250"
+                      min-height="250"
+                      element-loading-text="Loading..."
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(0, 0, 0, 0.8)"
+                      style="width: 100%">
+                    <el-table-column align="center" prop="id" label="ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="prescriptionID" label="Prescription ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="drugsID" label="Drug ID" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="drugsName" labell="drug name" width="100" show-overflow-tooltip>
+                      <template slot-scope="scope">
+                        <el-tag type="primary" size="mini">{{scope.row.drugsName}}</el-tag>
+                      </template>
+                    </el-table-column>
+                    <el-table-column align="center" prop="drugsUsage" label="usage" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="dosage" label="Dosage" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="frequency" label="frequency" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="amount" label="amount" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" prop="state" label="state" width="50" show-overflow-tooltip></el-table-column>
+                    <el-table-column align="center" fixed="right" label="Operation" width="50">
+                      <template slot-scope="scope">
+                        <el-button-group>
+                          <el-button style="color: #ff0000" type="text" size="mini" @click="deleteDrugs(scope.row)">Delete Drug</el-button>
+                        </el-button-group>
+                      </template>
+                    </el-table-column>
+                  </el-table>
+                </div>
+              </el-collapse-transition>
+            </el-card>
+          </el-col>
+        </el-row>
+      </div>
+      <div>
+        <el-dialog title="Add prescription" :visible.sync="addDialogVisible" width="80%">
+          <el-form :model="addPrescriptionForm" :rules="addPrescriptionFormRules" ref="addPrescriptionForm" width="80%">
+            <el-descriptions class="margin-top" :column="3" size="small" border>
+              <el-descriptions-item label="Prescription name">
+                <template>
+                  <el-form-item prop="prescriptionName">
+                    <el-input v-model="addPrescriptionForm.prescriptionName" placeholder="Please enter the prescription name" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="Opening time">
+                <template>
+                  <el-form-item prop="prescriptionTime">
+                    <el-date-picker
+                        v-model="addPrescriptionForm.prescriptionTime"
+                        type="datetime"
+                        placeholder="Select opening time"
+                        default-time="12:00:00">
+                    </el-date-picker>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button-group>
+              <el-button type="info" @click="resetPrescription('addPrescriptionForm')" icon="el-icon-refresh">Reset</el-button>
+              <el-button type="primary" @click="addDialogVisible = false; resetPrescription('addPrescriptionForm')" icon="el-icon-close">Cancel</el-button>
+              <el-button type="success" @click="addPrescription('addPrescriptionForm')" icon="el-icon-plus">Add</el-button>
+            </el-button-group>
+          </div>
+        </el-dialog>
+        <el-dialog title="Add Drug" :visible.sync="addDrugDialogVisible" width="80%">
+          <el-form :model="addDrugForm" :rules="addDrugFormRules" ref="addDrugForm" width="80%">
+            <el-descriptions class="margin-top" :column="3" size="small" border>
+              <el-descriptions-item label="drug name">
+                <template>
+                  <el-form-item prop="drugsName">
+                    <el-tooltip placement="top">
+                      <div slot="content">Select and enter keywords to search<br/>Support fuzzy search</div>
+                      <el-select
+                          v-model="drugsValue"
+                          filterable
+                          size="mini"
+                          style="width: 100px"
+                          remote
+                          clearable
+                          loading-text="Loading..."
+                          reserve-keyword
+                          placeholder="Please enter drug keywords"
+                          :remote-method="remoteMethod"
+                          :loading="drugsLoading">
+                        <el-option
+                            v-for="item in drugsOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-tooltip>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="usage">
+                <template>
+                  <el-form-item prop="drugsUsage">
+                    <el-input v-model="addDrugForm.drugsUsage" placeholder="Please enter usage" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="Dosage">
+                <template>
+                  <el-form-item prop="dosage">
+                    <el-input v-model="addDrugForm.dosage" placeholder="Please enter the dosage" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="frequency">
+                <template>
+                  <el-form-item prop="frequency">
+                    <el-input v-model="addDrugForm.frequency" placeholder="Please enter frequency" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="quantity">
+                <template>
+                  <el-form-item prop="amount">
+                    <el-input-number v-model="addDrugForm.amount" :min="1" label="Please enter the amount"></el-input-number>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button-group>
+              <el-button type="info" @click="resetDrug('addDrugForm')" icon="el-icon-refresh">Reset</el-button>
+              <el-button type="primary" @click="addDrugDialogVisible = false; resetDrug('addDrugForm')" icon="el-icon-close">Cancel</el-button>
+              <el-button type="success" @click="addDrugs('addDrugForm')" icon="el-icon-plus">Add</el-button>
+            </el-button-group>
+          </div>
+        </el-dialog>
+        <el-dialog title="Add Drug Template" :visible.sync="addTemplateDialogVisible" width="80%">
+          <el-form :model="addTemplateForm" :rules="addTemplateFormRules" ref="addTemplateForm" width="80%">
+            <el-descriptions class="margin-top" :column="3" size="small" border>
+              <el-descriptions-item label="template name">
+                <template>
+                  <el-form-item prop="name">
+                    <el-input v-model="addTemplateForm.name" placeholder="Please enter the template name" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="Creation time">
+                <template>
+                  <el-form-item prop="creationTime">
+                    <el-date-picker
+                        v-model="addTemplateForm.creationTime"
+                        type="datetime"
+                        placeholder="Select opening time"
+                        default-time="12:00:00">
+                    </el-date-picker>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="Scope of use">
+                <template>
+                  <el-form-item prop="scope">
+                    <el-select v-model="addTemplateForm.scope" placeholder="Please select the scope" clearable>
+                      <el-option label="Whole Hospital" value="Whole Hospital"></el-option>
+                      <el-option label="Department" value="Department"></el-option>
+                      <el-option label="Personal" value="Personal"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button-group>
+              <el-button type="info" @click="resetTemplate('addTemplateForm')" icon="el-icon-refresh">Reset</el-button>
+              <el-button type="primary" @click="addTemplateDialogVisible = false; resetTemplate('addTemplateForm')" icon="el-icon-close">Cancel</el-button>
+              <el-button type="success" @click="addTemplateConfirm('addTemplateForm')" icon="el-icon-plus">Add</el-button>
+            </el-button-group>
+        </div>
+        </el-dialog>
+        <el-dialog title="Add patent medicine detail template" :visible.sync="addTemplateDetailDialogVisible" width="80%">
+          <el-form :model="addTemplateDetailForm" :rules="addTemplateDetailFormRules" ref="addTemplateDetailForm" width="80%">
+            <el-descriptions class="margin-top" :column="3" size="small" border>
+              <el-descriptions-item label="drug name">
+                <template>
+                  <el-form-item prop="drugsName">
+                    <el-tooltip placement="top">
+                      <div slot="content">Select and enter keywords to search<br/>Support fuzzy search</div>
+                      <el-select
+                          v-model="drugsValue"
+                          filterable
+                          size="mini"
+                          style="width: 100px"
+                          remote
+                          clearable
+                          loading-text="Loading..."
+                          reserve-keyword
+                          placeholder="Please enter drug keywords"
+                          :remote-method="remoteMethod"
+                          :loading="drugsLoading">
+                        <el-option
+                            v-for="item in drugsOptions"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                      </el-select>
+                    </el-tooltip>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="usage">
+                <template>
+                  <el-form-item prop="drugsUsage">
+                    <el-input v-model="addTemplateDetailForm.drugsUsage" placeholder="Please enter usage" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="Dosage">
+                <template>
+                  <el-form-item prop="dosage">
+                    <el-input v-model="addTemplateDetailForm.dosage" placeholder="Please enter the dosage" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+              <el-descriptions-item label="frequency">
+                <template>
+                  <el-form-item prop="frequency">
+                    <el-input v-model="addTemplateDetailForm.frequency" placeholder="Please enter frequency" clearable></el-input>
+                  </el-form-item>
+                </template>
+              </el-descriptions-item>
+            </el-descriptions>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button-group>
+              <el-button type="info" @click="resetTemplateDetail('addTemplateDetailForm')" icon="el-icon-refresh">Reset</el-button>
+              <el-button type="primary" @click="addTemplateDetailDialogVisible = false; resetTemplateDetail('addTemplateDetailForm')" icon="el-icon-close">Cancel</el-button>
+              <el-button type="success" @click="addTemplateDetailConfirm('addTemplateDetailForm')" icon="el-icon-plus">Add</el-button>
+            </el-button-group>
+          </div>
+        </el-dialog>
+      </div>
+    </div>
 </template>
 
 <script>
 export default {
-   name: "PatentPrescription",
-   data() {
-     return {
-       prop: 'RealName',
-       presentUser: {},
-       searchByName: true,
-       searchPatient: {
-         RealName: '',
-         CaseNumber: '',
-         DeptID: null,
-         UserID: null,
-       },
-       searchPatientRules: {
-         RealName: [{required: true, message: 'Please enter your name', trigger: 'blur'}],
-         CaseNumber: [{required: true, message: 'Please enter the medical record number', trigger: 'blur'}]
-       },
-       loading: false,
-       isChoose: false,
-       chosenPatient: {
-         RealName: '',
-         CaseNumber: '',
-         Gender: '',
-         Age: '',
-         RegistID: '',
-         MedicalID: '',
-       },
-       patients: [],
-       currentPageForPatient: 1,
-       pageSizeForPatient: 3,
-       prescription: [],
-       prescriptionRules: {
-         ID: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
-         MedicalID: [{required: true, message: 'Please enter medical record ID', trigger: 'blur'}],
-         RegistID: [{required: true, message: 'Please enter the registration ID', trigger: 'blur'}],
-         UserID: [{required: true, message: 'Please enter the issuing doctor ID', trigger: 'blur'}],
-         PrescriptionName: [{required: true, message: 'Please enter the prescription name', trigger: 'blur'}],
-         PrescriptionTime: [{required: true, message: 'Please enter the opening time', trigger: 'blur'}],
-         PrescriptionState: [{required: true, message: 'Please enter the prescription status', trigger: 'blur'}],
-       },
-       addPrescriptionForm: {
-         id: '',
-         medicalID: '',
-         registerID: '',
-         userID: '',
-         prescriptionName: null,
-         prescriptionTime: null,
-         prescriptionState: '',
-       },
-       addPrescriptionFormRules: {
-         id: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
-         medicalID: [{required: true, message: 'Please enter medical record ID', trigger: 'blur'}],
-         registID: [{required: true, message: 'Please enter the registration ID', trigger: 'blur'}],
-         userID: [{required: true, message: 'Please enter the issuing doctor ID', trigger: 'blur'}],
-         prescriptionName: [{required: true, message: 'Please enter the prescription name', trigger: 'blur'}],
-         prescriptionTime: [{required: true, message: 'Please enter the prescription time', trigger: 'blur'}],
-         prescriptionState: [{required: true, message: 'Please enter prescription status', trigger: 'blur'}],
-       },
-       addDialogVisible: false,
-       currentPage: 1,
-       currentPageForDetail: 1,
-       pageSize: 5,
-       pageSizeForDetail: 5,
-       isChooseDetail: false,
-       detailLoading: false,
-       detail: [],
-       addDrugDialogVisible: false,
-       addDrugForm: {
-         id: '',
-         prescriptionID: '',
-         drugsID: '',
-         drugsUsage: '',
-         dosage: '',
-         frequency: '',
-         amount: '',
-         state: 2,
-         drugsName: '',
-       },
-       addDrugFormRules: {
-         id: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
-         prescriptionID: [{required: true, message: 'Please enter prescription ID', trigger: 'blur'}],
-         drugsID: [{required: true, message: 'Please enter the drug ID', trigger: 'blur'}],
-         drugsUsage: [{required: true, message: 'Please enter usage', trigger: 'blur'}],
-         dosage: [{required: true, message: 'Please enter the dosage', trigger: 'blur'}],
-         frequency: [{required: true, message: 'Please enter frequency', trigger: 'blur'}],
-         amount: [{required: true, message: 'Please enter the quantity', trigger: 'blur'}],
-         state: [{required: true, message: 'Please enter the drug status', trigger: 'blur'}],
-         drugsName: [{required: true, message: 'Please enter the drug name', trigger: 'blur'}],
-       },
-       drugsLoading: false,
-       drugsValue: [],
-       drugsOptions: [],
-       drugsList: [],
-       drugsStates: [],
-       chooseTemp: null,
-       templateLoading: false,
-       drugsTemplate: [],
-       currentPageForTemplate: 1,
-       pageSizeForTemplate: 3,
-       isChooseTemplate: false,
-       templateRadio: 0,
-       isChooseTemplateDetail: false,
-       drugsTemplateDetail: [],
-       currentPageForTemplateDetail: 1,
-       pageSizeForTemplateDetail: 3,
-       templateDetailLoading: false,
+    name: "PatentPrescription",
+    data() {
+      return {
+        prop: 'RealName',
+        presentUser: {},
+        searchByName: true,
+        searchPatient: {
+          RealName: '',
+          CaseNumber: '',
+          DeptID: null,
+          UserID: null,
+        },
+        searchPatientRules: {
+          RealName: [{required: true, message: 'Please enter your name', trigger: 'blur'}],
+          CaseNumber: [{required: true, message: 'Please enter the medical record number', trigger: 'blur'}]
+        },
+        loading: false,
+        isChoose: false,
+        chosenPatient: {
+          RealName: '',
+          CaseNumber: '',
+          Gender: '',
+          Age: '',
+          RegistID: '',
+          MedicalID: '',
+        },
+        patients: [],
+        currentPageForPatient: 1,
+        pageSizeForPatient: 3,
+        prescription: [],
+        prescriptionRules: {
+          ID: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
+          MedicalID: [{required: true, message: 'Please enter medical record ID', trigger: 'blur'}],
+          RegistID: [{required: true, message: 'Please enter the registration ID', trigger: 'blur'}],
+          UserID: [{required: true, message: 'Please enter the issuing doctor ID', trigger: 'blur'}],
+          PrescriptionName: [{required: true, message: 'Please enter the prescription name', trigger: 'blur'}],
+          PrescriptionTime: [{required: true, message: 'Please enter the opening time', trigger: 'blur'}],
+          PrescriptionState: [{required: true, message: 'Please enter the prescription status', trigger: 'blur'}],
+        },
+        addPrescriptionForm: {
+          id: '',
+          medicalID: '',
+          registerID: '',
+          userID: '',
+          prescriptionName: null,
+          prescriptionTime: null,
+          prescriptionState: '',
+        },
+        addPrescriptionFormRules: {
+          id: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
+          medicalID: [{required: true, message: 'Please enter medical record ID', trigger: 'blur'}],
+          registID: [{required: true, message: 'Please enter the registration ID', trigger: 'blur'}],
+          userID: [{required: true, message: 'Please enter the issuing doctor ID', trigger: 'blur'}],
+          prescriptionName: [{required: true, message: 'Please enter the prescription name', trigger: 'blur'}],
+          prescriptionTime: [{required: true, message: 'Please enter the prescription time', trigger: 'blur'}],
+          prescriptionState: [{required: true, message: 'Please enter prescription status', trigger: 'blur'}],
+        },
+        addDialogVisible: false,
+        currentPage: 1,
+        currentPageForDetail: 1,
+        pageSize: 5,
+        pageSizeForDetail: 5,
+        isChooseDetail: false,
+        detailLoading: false,
+        detail: [],
+        addDrugDialogVisible: false,
+        addDrugForm: {
+          id: '',
+          prescriptionID: '',
+          drugsID: '',
+          drugsUsage: '',
+          dosage: '',
+          frequency: '',
+          amount: '',
+          state: 2,
+          drugsName: '',
+        },
+        addDrugFormRules: {
+          id: [{required: true, message: 'Please enter ID', trigger: 'blur'}],
+          prescriptionID: [{required: true, message: 'Please enter prescription ID', trigger: 'blur'}],
+          drugsID: [{required: true, message: 'Please enter the drug ID', trigger: 'blur'}],
+          drugsUsage: [{required: true, message: 'Please enter usage', trigger: 'blur'}],
+          dosage: [{required: true, message: 'Please enter the dosage', trigger: 'blur'}],
+          frequency: [{required: true, message: 'Please enter frequency', trigger: 'blur'}],
+          amount: [{required: true, message: 'Please enter the quantity', trigger: 'blur'}],
+          state: [{required: true, message: 'Please enter the drug status', trigger: 'blur'}],
+          drugsName: [{required: true, message: 'Please enter the drug name', trigger: 'blur'}],
+        },
+        drugsLoading: false,
+        drugsValue: [],
+        drugsOptions: [],
+        drugsList: [],
+        drugsStates: [],
+        chooseTemp: null,
+        templateLoading: false,
+        drugsTemplate: [],
+        currentPageForTemplate: 1,
+        pageSizeForTemplate: 3,
+        isChooseTemplate: false,
+        templateRadio: 0,
+        isChooseTemplateDetail: false,
+        drugsTemplateDetail: [],
+        currentPageForTemplateDetail: 1,
+        pageSizeForTemplateDetail: 3,
+        templateDetailLoading: false,
        tempTemplate: [],
        addTemplateDialogVisible: false,
        addTemplateForm: {
