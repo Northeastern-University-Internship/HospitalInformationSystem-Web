@@ -37,7 +37,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    component: () => import('../views/Login.vue')
   }
 ]
 
@@ -46,18 +46,13 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 })
-
-// router.afterEach((to, from) => {
-//
-// })
-
 router.beforeEach((to, from, next) => {
   let hasRoute = store.state.menus.hasRoute
   let param = localStorage.getItem("User");
-  console.log("本地User1 = ", param);
+  console.log("local User1 = ", param);
   if (!hasRoute && JSON.parse(localStorage.getItem("User")) !== null) {
     let param = JSON.parse(localStorage.getItem("User"));
-    console.log("本地User2 = ", param);
+    console.log("local User2 = ", param);
     axios.post("/sys/menu/nav", param).then(res => {
       let authorization = [];
       let temp = {};
@@ -67,19 +62,14 @@ router.beforeEach((to, from, next) => {
       }
 
       console.log("Menu Navigation = ", temp.data);
-      //Getting Menu Navigation
       store.commit("setMenuList", temp.data.nav)
-      //Getting Authority of the User
       store.commit("setPermList", temp.data.authorization)
 
-      //connecting user Location
       let newRoutes = router.options.routes;
       temp.data.nav.forEach(menu => {
         if (menu.children) {
           menu.children.forEach(e => {
-            //changing User IP Location
             let route = menuToRoute(e);
-            //push into the user Location
             if (route) {
               newRoutes[0].children.push(route)
             }
@@ -97,7 +87,6 @@ router.beforeEach((to, from, next) => {
   next();
 })
 
-//navigate to menu
 const menuToRoute = (menu) => {
   if (!menu.component) {
     return null;
