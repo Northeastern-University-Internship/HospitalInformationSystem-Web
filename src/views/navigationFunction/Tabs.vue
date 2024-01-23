@@ -16,8 +16,6 @@ export default {
   name: "Tabs",
   data() {
     return {
-      // editableTabsValue: this.$store.state.menus.editableTabsValue,
-      // editableTabs: this.$store.state.menus.editableTabs,
     }
   },
   computed: {

@@ -6,10 +6,10 @@
       background-color="#143f6b"
       active-text-color="#ffd04b">
     <router-link to="/index">
-      <el-menu-item index="Index" @click="selectMenu({name: 'Index', title: '首页'})">
+      <el-menu-item index="Index" @click="selectMenu({name: 'Index', title: 'Main Page'})">
         <template slot="title">
           <i class="el-icon-s-home"></i>
-          <span slot="title">首页</span>
+          <span slot="title">Main Page</span>
         </template>
       </el-menu-item>
     </router-link>
