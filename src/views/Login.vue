@@ -1,18 +1,11 @@
 <template>
   <div class="auth-container">
     <div class="login-wrap">
-      <!-- Background Video -->
-      <!-- <video id="v1" autoplay loop muted>
-        <source src="../assets/bg.mp4" type="video/mp4">
-      </video> -->
-
-      <!-- Login and Signup Forms -->
       <div class="login-box">
         <el-row justify="center" type="flex" align="middle">
-          <!-- Login Form Section -->
           <el-col :span="12">
             <div class="form-section">
-              <h2>Neusoft Cloud HIS Medical System</h2>
+              <h2>NEUSoft Hospital Information System</h2>
               <el-image :src="require('@/assets/logo.png')" style="height: 150px; width: 150px; margin-bottom: 20px"></el-image>
               <el-form :model="User" :rules="rules" ref="User" label-width="80px">
                 <el-form-item label="Username" prop="UserName">
@@ -22,17 +15,14 @@
                   <el-input type="password" v-model="User.Password"></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <!-- <el-button type="primary" @click="submitForm('UserForm')">Log in</el-button> -->
                   <el-button type="primary" icon="el-icon-s-custom" @click="submitForm('User')">Log in</el-button>
                   <el-button @click="resetForm('User')" icon="el-icon-refresh">reset</el-button>
-                  <!-- <el-button type="success" @click="submitNewUserForm('NewUserForm')">Sign Up</el-button> -->
                   <el-button type="success" icon="el-icon-s-custom" @click="submitNewUserForm">Signup</el-button>
                 </el-form-item>
               </el-form>
             </div>
           </el-col>
           <el-col :span="1">
-            <!-- Divider -->
             <div class="divider">
               <el-divider direction="vertical"></el-divider>
             </div>
@@ -42,7 +32,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   name: "Login",
@@ -98,7 +87,7 @@ export default {
       this.$refs[formName].resetFields();
     },
     submitNewUserForm() {
-    this.$router.push('/signup'); // Redirect to the signup route
+    this.$router.push('/signup');
   },
     getCaptcha() {
       this.$axios.get('/captcha').then(res => {
@@ -109,12 +98,10 @@ export default {
       })
     }
   },
-    //Result : code、msg、data
   }
 </script>
 
 <style scoped>
-/* Add your styles here */
 
 .auth-container {
   width: 100%;
@@ -165,6 +152,4 @@ video {
 .el-divider {
   height: 80%;
 }
-
-/* You might need to adjust the following styles according to your project's design */
 </style>

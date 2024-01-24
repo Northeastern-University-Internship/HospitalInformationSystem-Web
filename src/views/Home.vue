@@ -7,7 +7,7 @@
       <el-header>
         <img :src="require('@/assets/logo.png')" class="logo">
         <strong style="font-size: x-large;color: #1e3273;margin-left: 10px">
-          Neusoft Cloud HIS Medical
+          NEUSoft Hospital Information System
         </strong>
         <div class="header-avatar">
           <el-avatar size="medium" :src="require('@/assets/logo.png')"></el-avatar>
@@ -56,9 +56,6 @@ export default {
   },
   methods: {
     getUserInfo() {
-      // this.$axios.get("/sys/userInfo").then(res => {
-      //   this.userInfo = res.data.data;
-      // })
       this.userInfo = JSON.parse(localStorage.getItem("User"));
       console.log("userInfo.RealName = ", this.userInfo.realName);
     },
@@ -71,7 +68,6 @@ export default {
       })
     },
     selectMenu(item) {
-      // console.log("item:", item);
       this.$store.commit("addTab", item);
     }
   }

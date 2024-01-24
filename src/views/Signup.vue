@@ -2,7 +2,6 @@
   <div class="auth-container">
     <div class="login-wrap">
       <div class="login-box">
-        <!-- <h2>Neusoft Cloud HIS Medical System</h2> -->
         <div style="text-align: center;">
           <el-image :src="require('@/assets/logo.png')" style="height: 120px; width: 250px; margin-bottom: 10px; text-align: center;"></el-image>
         </div>
@@ -70,7 +69,6 @@
       this.$refs[formName].validate((valid) => {
         if (valid) {
           console.log('submit!', this.user);
-          // Perform the user registration logic here, possibly making an API call
         } else {
           console.log('error submit!!');
           return false;
@@ -78,7 +76,7 @@
       });
     },
     loginForm() {
-    this.$router.push('/login'); // Redirect to the login route
+    this.$router.push('/login'); 
   },
     resetForm(formName) {
       this.$refs[formName].resetFields();
@@ -88,7 +86,6 @@
 </script>
 
 <style scoped>
-  /* Update your styles here */
   .auth-container {
     display: flex;
     justify-content: center;

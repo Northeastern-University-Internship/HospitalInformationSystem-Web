@@ -1,12 +1,10 @@
 <template>
   <div class="page-container">
-    <!-- Carousel at the top of the page -->
     <div class="carousel-container">
       <User></User>
     </div>
 
     <el-container class="main-content">
-      <!-- Add main content here -->
     </el-container>
 
     <div class="footer">
@@ -58,19 +56,19 @@ export default {
 }
 
 .carousel-container {
-  flex: 0 0 auto; /* Do not grow or shrink */
+  flex: 0 0 auto; 
 }
 
 .main-content {
-  flex: 1; /* Grow to fill available space */
-  overflow-y: auto; /* Add scroll if content overflows */
+  flex: 1;
+  overflow-y: auto;
 }
 
 .footer {
-  flex: 0 0 auto; /* Do not grow or shrink */
-  background-color: #f2f2f2; /* Footer background color */
+  flex: 0 0 auto; 
+  background-color: #f2f2f2;
   padding: 20px;
-  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Add shadow to the top of the footer */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .number-cards {
@@ -91,7 +89,7 @@ export default {
 
 .myCard {
   margin: 0 10px;
-  flex: 1; /* Distribute space evenly */
+  flex: 1; 
 }
 
 

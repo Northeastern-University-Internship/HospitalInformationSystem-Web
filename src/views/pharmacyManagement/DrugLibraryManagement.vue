@@ -7,7 +7,7 @@
                     v-model="addForm.drugsName" clearable
                     @clear="doQuery()">
             <el-button slot="append" icon="el-icon-search"
-                       @click="doQuery()">
+                      @click="doQuery()">
             </el-button>
           </el-input>
         </el-col>
@@ -31,22 +31,19 @@
         <el-table-column label="Last Modified" prop="lastUpdateDate"></el-table-column>
         <el-table-column label="delete mark" prop="delMark"></el-table-column>
         <el-table-column label="Modify operations" width="100px">
-          <!--Modify button-->
           <template slot-scope="scope">
             <el-button type="primary"  size="mini"
-                       @click="enableUpdateDialog(scope.row)">Revise</el-button>
+                      @click="enableUpdateDialog(scope.row)">Revise</el-button>
           </template>
         </el-table-column>
-
         <el-table-column label="Delete operation" width="100px">
           <template slot-scope="scope">
             <el-button type="primary"  size="mini"
-                       @click="doDelete(scope.row)">delete</el-button>
+                      @click="doDelete(scope.row)">delete</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-card>
-    <!--Add drug information-->
     <el-dialog
         title="Add drug information"
         :visible.sync="addDialogVisable"
@@ -55,97 +52,74 @@
         <el-form-item label="drug code" prop="drugsCode">
           <el-input v-model="addForm.drugsCode"></el-input>
         </el-form-item>
-
         <el-form-item label="Drug Name" prop="drugsName">
           <el-input v-model="addForm.drugsName"></el-input>
         </el-form-item>
-
         <el-form-item label="Specification" prop="drugsFormat">
           <el-input v-model="addForm.drugsFormat"></el-input>
         </el-form-item>
-
         <el-form-item label="packaging unit" prop="drugsUnit">
           <el-input v-model="addForm.drugsUnit"></el-input>
         </el-form-item>
-
         <el-form-item label="Pharmaceutical dosage form" prop="drugsDosageID">
           <el-input v-model="addForm.drugsDosageID"></el-input>
         </el-form-item>
-
         <el-form-item label="Drug type" prop="drugsTypeID">
           <el-input v-model="addForm.drugsTypeID"></el-input>
         </el-form-item>
-
         <el-form-item label="Pinyin mnemonic code" prop="mnemonicCode">
           <el-input v-model="addForm.mnemonicCode"></el-input>
         </el-form-item>
-
         <el-form-item label="unit price" prop="drugsPrice">
           <el-input v-model="addForm.drugsPrice"></el-input>
         </el-form-item>
-
         <el-form-item label="factory" prop="manufacturer">
           <el-input v-model="addForm.manufacturer"></el-input>
         </el-form-item>
-
         <el-form-item label="Creation date" prop="creationDate">
           <el-input v-model="addForm.creationDate"></el-input>
         </el-form-item>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
     <el-button @click="addDialogVisable = false">Cancel</el-button>
     <el-button type="primary" @click="doAdd()">Sure</el-button>
   </span>
     </el-dialog>
-
-    <!--Modify user-->
     <el-dialog
         title="Modify user"
         :visible.sync="updateDialogVisable"
         width="50%" @close="updateDialogClosed">
       <el-form :model="currentRow" ref="addFormRed" label-width="100px">
-
         <el-form-item label="drug code" prop="drugsCode">
           <el-input v-model="currentRow.drugsCode"></el-input>
         </el-form-item>
-
         <el-form-item label="Drug Name" prop="drugsName">
           <el-input v-model="currentRow.drugsName"></el-input>
         </el-form-item>
-
         <el-form-item label="Specification" prop="drugsFormat">
           <el-input v-model="currentRow.drugsFormat"></el-input>
         </el-form-item>
-
         <el-form-item label="packaging unit" prop="drugsUnit">
           <el-input v-model="currentRow.drugsUnit"></el-input>
         </el-form-item>
-
         <el-form-item label="Pharmaceutical dosage form" prop="drugsDosageID">
           <el-input v-model="currentRow.drugsDosageID"></el-input>
         </el-form-item>
-
         <el-form-item label="Drug type" prop="drugsTypeID">
           <el-input v-model="currentRow.drugsTypeID"></el-input>
         </el-form-item>
-
         <el-form-item label="Pinyin mnemonic code" prop="mnemonicCode">
           <el-input v-model="currentRow.mnemonicCode"></el-input>
         </el-form-item>
-
         <el-form-item label="unit price" prop="drugsPrice">
           <el-input v-model="currentRow.drugsPrice"></el-input>
         </el-form-item>
-
         <el-form-item label="factory" prop="manufacturer">
           <el-input v-model="currentRow.manufacturer"></el-input>
         </el-form-item>
-
         <el-form-item label="Creation date" prop="creationDate">
           <el-input v-model="currentRow.creationDate"></el-input>
         </el-form-item>
-
         <el-form-item label="Modification date" prop="lastUpdateDate">
           <el-input v-model="currentRow.lastUpdateDate"></el-input>
         </el-form-item>
@@ -155,10 +129,8 @@
     <el-button type="primary" @click="doUpdate()">Sure</el-button>
   </span>
     </el-dialog>
-
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -226,8 +198,6 @@ export default {
     updateDialogClosed() {
       this.$refs.addFormRed.resetFields()
     },
-
-    //添加用户
     doAdd(){
       let url='/outpatientPharmacyWorkstation/drugCatalogueManagement/add';
       let param=this.$qs.stringify(this.addForm);

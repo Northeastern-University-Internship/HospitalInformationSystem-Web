@@ -14,10 +14,8 @@ Vue.config.productionTip = false
 
 Vue.use(Element);
 
-Vue.prototype.$axios = axios;// 全局使用
+Vue.prototype.$axios = axios;
 Vue.prototype.$qs = qs;
-
-// require("./mock");
 
 new Vue({
   router,

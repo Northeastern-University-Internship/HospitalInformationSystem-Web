@@ -91,8 +91,6 @@
                 </el-option>
               </template>
             </template>
-
-            <!--            <el-option label="Area 2" value="beijing"></el-option>-->
           </el-select>
         </el-form-item>
 

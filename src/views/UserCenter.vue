@@ -77,10 +77,6 @@ export default {
   },
   methods: {
     getUserInfo() {
-      // this.$axios.get("/userCenter/userInfo").then(res => {
-      //
-      //   this.userInfo = res.data.data;
-      // })
       let user = JSON.parse(localStorage.getItem("User"));
       this.userInfo.ID = user.id;
       this.userInfo.UserName = user.userName;
