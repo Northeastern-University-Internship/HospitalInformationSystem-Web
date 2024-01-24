@@ -34,10 +34,11 @@
                  <el-descriptions size="mini" title="Basic patient information" direction="vertical" :column="4" border>
                    <el-descriptions-item label="Name" :span="2">{{choosedPatient.RealName}}</el-descriptions-item>
                    <el-descriptions-item label="Medical Record Number" :span="2">{{choosedPatient.CaseNumber}}</el-descriptions-item>
-                   <el-descriptions-item label="Gender" :span="2" v-if="choosedPatient.Gender===71"><el-tag type="success">Male</el-tag></ el-descriptions-item>
+                   <el-descriptions-item label="Gender" :span="2" v-if="choosedPatient.Gender===71"><el-tag type="success">Male</el-tag></el-descriptions-item>
                    <el-descriptions-item label="gender" :span="2" v-else><el-tag type="warning">Female</el-tag></el-descriptions-item>
                    <el-descriptions-item label="Age" :span="2">{{choosedPatient.Age}}</el-descriptions-item>
-               </div>
+                  </el-descriptions>
+                </div>
              </el-collapse-transition>
            </el-card>
          </el-col>
@@ -263,7 +264,7 @@
                                    <el-button style="color: #ff0606" :disabled="canDelete(scope.row)" type="text" size="mini" @click="deleteDialogVisible = true">Delete</el-button>
                                  </div>
                                </el-button-group>
-                               <el-dialogtitle="Warning"
+                               <el-dialogtitle="Warning">
                                    :visible.sync="deleteDialogVisible"
                                    append-to-body
                                    width="20%">
@@ -272,7 +273,7 @@
                                <el-button @click="deleteDialogVisible = false" icon="el-icon-refresh-left">Cancel</el-button>
                                <el-button type="danger" @click="deleteTemplate(scope.row, scope.index);deleteDialogVisible = false" icon="el-icon-delete">OK</el-button>
                              </span>
-                               </el-dialogtitle=>
+                               </el-dialogtitle>
                              </template>
                            </el-table-column>
                          </el-table>

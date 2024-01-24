@@ -209,7 +209,7 @@ export default {
             console.log('rrrrrrr')
             console.log(resp.data)
             if(i==200){
-              this.$router.push('/outpatientPharmacyWorkstation/drugCatalogueManagement/')
+              this.$router.push('/pharmacyManagement/DrugLibraryManagement/')
               location.reload();
             }else{
               this.msg='Failed to add, please process'
@@ -231,7 +231,7 @@ export default {
           .then((resp)=>{
             let i=resp.data.code;
             if(i==200){
-              this.$router.push('/outpatientPharmacyWorkstation/drugCatalogueManagement')
+              this.$router.push('/pharmacyManagement/DrugLibraryManagement')
               location.reload();
             }else{
               this.msg='Modification failed, please process'
