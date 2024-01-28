@@ -9,9 +9,12 @@ export default {
   name: "clock",
   methods: {
     myClockEcharts() {
+      // Based on the prepared dom, initialize the echarts instance
       const myChart = echarts.init(document.getElementById('clock'));
+
       const option = {
         series: [
+          
           {
             name: 'hour',
             type: 'gauge',
@@ -72,6 +75,7 @@ export default {
               }
             ]
           },
+          //分钟
           {
             name: 'minute',
             type: 'gauge',
@@ -130,7 +134,7 @@ export default {
               }
             ]
           },
-          //秒
+          
           {
             name: 'second',
             type: 'gauge',
