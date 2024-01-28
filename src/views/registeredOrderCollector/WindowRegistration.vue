@@ -18,19 +18,19 @@
             <el-col :span="5">
               <el-form-item label="Medical record number:" prop="caseNumber">
                 <el-input size="mini" style="width: 180px" prefix-icon="el-icon-edit"
-                          v-model="registerValue.caseNumber" placeholder="病历号" clearable></el-input>
+                          v-model="registerValue.caseNumber" placeholder="Medical record number" clearable></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
               <el-form-item label="Name:" prop="realName">
-                <el-input v-model="registerValue.realName" placeholder="姓名" size="mini"
+                <el-input v-model="registerValue.realName" placeholder="Name" size="mini"
                           style="width: 150px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="3">
               <el-form-item label="gender:" prop="Gender">
-                <el-select v-model="registerValue.gender" placeholder="性别" size="mini" style="width: 80px;">
+                <el-select v-model="registerValue.gender" placeholder="gender" size="mini" style="width: 80px;">
                   <el-option
                       v-for="item in Gender"
                       :key="item"
@@ -41,15 +41,15 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="年龄:" prop="age">
-                <el-input v-model="registerValue.age" placeholder="年龄" size="mini"
+              <el-form-item label="age:" prop="age">
+                <el-input v-model="registerValue.age" placeholder="age" size="mini"
                           style="width: 140px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="2">
               <el-form-item label="" prop="ageType">
-                <el-select v-model="registerValue.ageType" placeholder="年" size="mini" style="width: 80px;">
+                <el-select v-model="registerValue.ageType" placeholder="year" size="mini" style="width: 80px;">
                   <el-option
                       v-for="item in ageType"
                       :key="item"
@@ -60,33 +60,33 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="出生日期:" prop="birthDate">
+              <el-form-item label="date of birth:" prop="birthDate">
                 <el-date-picker
                     v-model="registerValue.birthDate"
                     type="date"
-                    placeholder="选择日期">
+                    placeholder="Select date">
                 </el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">
-              <el-form-item label="身份证号:" prop="iDnumber">
-                <el-input v-model="registerValue.iDnumber" placeholder="身份证号" size="mini"
+              <el-form-item label="ID number:" prop="iDnumber">
+                <el-input v-model="registerValue.iDnumber" placeholder="ID number" size="mini"
                           style="width: 180px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="5">
-              <el-form-item label="家庭地址:" prop="homeAddress">
-                <el-input v-model="registerValue.homeAddress" placeholder="家庭地址" size="mini"
+              <el-form-item label="address:" prop="homeAddress">
+                <el-input v-model="registerValue.homeAddress" placeholder="address" size="mini"
                           style="width: 180px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="3">
-              <el-form-item label="午别:" prop="noon">
-                <el-select v-model="registerValue.noon" placeholder="午别" size="mini" style="width: 80px;">
+              <el-form-item label="Goodbye at noon:" prop="noon">
+                <el-select v-model="registerValue.noon" placeholder="Goodbye at noon" size="mini" style="width: 80px;">
                   <el-option
                       v-for="item in Noon"
                       :key="item"
@@ -97,33 +97,33 @@
               </el-form-item>
             </el-col>
             <el-col :span="5">
-              <el-form-item label="挂号科室ID:" prop="deptID">
-                <el-input v-model="registerValue.deptID" placeholder="挂号科室ID" size="mini"
+              <el-form-item label="Registration department ID:" prop="deptID">
+                <el-input v-model="registerValue.deptID" placeholder="Registration department ID" size="mini"
                           style="width: 150px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="看诊日期:" prop="visitDate">
+              <el-form-item label="Consultation date:" prop="visitDate">
                 <el-date-picker
                     v-model="registerValue.visitDate"
                     type="date"
-                    placeholder="选择日期">
+                    placeholder="Select date">
                 </el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">
-              <el-form-item label="挂号医生ID:" prop="userID">
-                <el-input v-model="registerValue.userID" placeholder="挂号科室ID" size="mini"
+              <el-form-item label="Registered doctor ID:" prop="userID">
+                <el-input v-model="registerValue.userID" placeholder="Registration department ID" size="mini"
                           style="width: 155px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="挂号级别:" prop="registLeID">
-                <el-select v-model="registerValue.registLeID" placeholder="挂号级别" size="mini" style="width: 100px;">
+              <el-form-item label="Registration level:" prop="registLeID">
+                <el-select v-model="registerValue.registLeID" placeholder="Registration level" size="mini" style="width: 100px;">
                   <el-option
                       v-for="item in RegistLeID"
                       :key="item"
@@ -134,8 +134,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="结算类别:" prop="settleID">
-                <el-select v-model="registerValue.settleID" placeholder="自费" size="mini" style="width: 120px;">
+              <el-form-item label="Settlement category:" prop="settleID">
+                <el-select v-model="registerValue.settleID" placeholder="At own expense" size="mini" style="width: 120px;">
                   <el-option
                       v-for="item in settleID"
                       :key="item"
@@ -146,26 +146,26 @@
               </el-form-item>
             </el-col>
             <el-col :span="5">
-              <el-form-item label="挂号员ID:" prop="registerID">
-                <el-input v-model="registerValue.registerID" placeholder="挂号员ID" size="mini"
+              <el-form-item label="Registration clerk ID:" prop="registerID">
+                <el-input v-model="registerValue.registerID" placeholder="Registration clerk ID" size="mini"
                           style="width: 160px;" filterable>
                 </el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="挂号时间:" prop="registTime">
+              <el-form-item label="Registration time:" prop="registTime">
                 <el-date-picker
                     v-model="registerValue.registTime"
                     type="datetime"
-                    placeholder="选择日期时间">
+                    placeholder="Select date time">
                 </el-date-picker>
               </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="5">
-              <el-form-item label="看诊状态:" prop="visitState">
-                <el-select v-model="registerValue.visitState" placeholder="看诊状态" size="mini" style="width: 165px;">
+              <el-form-item label="Consultation status:" prop="visitState">
+                <el-select v-model="registerValue.visitState" placeholder="Consultation status" size="mini" style="width: 165px;">
                   <el-option
                       v-for="item in VisitState"
                       :key="item"
@@ -176,8 +176,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="4">
-              <el-form-item label="病历本:" prop="isBook">
-                <el-select v-model="registerValue.isBook" placeholder="病历本" size="mini" style="width: 100px;">
+              <el-form-item label="Medical history:" prop="isBook">
+                <el-select v-model="registerValue.isBook" placeholder="Medical history" size="mini" style="width: 100px;">
                   <el-option
                       v-for="item in IsBook"
                       :key="item"
@@ -188,8 +188,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="24">
-              <el-button style="margin-left: 90%" type="success" @click="doAdd();doQuery()">挂号</el-button>
-              <!--              <el-button>重置</el-button>-->
+              <el-button style="margin-left: 90%" type="success" @click="doAdd();doQuery()">registered</el-button>
             </el-col>
           </el-row>
         </el-form>
@@ -205,73 +204,71 @@
           <el-table-column
               prop="caseNumber"
               fixed
-              label="病历号"
+              label="Medical record number"
               width="100">
           </el-table-column>
           <el-table-column
               prop="realName"
-              label="姓名"
+              label="Name"
               width="100">
           </el-table-column>
           <el-table-column
               prop="gender"
-              label="性别"
+              label="gender"
               :formatter="isGender"
               width="60">
           </el-table-column>
           <el-table-column
               prop="idnumber"
-              label="身份证号"
+              label="ID number"
               width="100">
           </el-table-column>
           <el-table-column
               prop="birthDate"
-              label="出生日期"
+              label="date of birth"
               width="100">
           </el-table-column>
           <el-table-column
               prop="visitDate"
-              label="看诊时间"
+              label="Consultation time"
               width="100">
           </el-table-column>
           <el-table-column
               prop="deptID"
-              label="挂号科室ID"
+              label="Registration department ID"
               width="100">
           </el-table-column>
           <el-table-column
               prop="visitDate"
-              label="看诊日期"
+              label="Consultation date"
               width="100">
           </el-table-column>
           <el-table-column
               prop="registTime"
-              label="挂号日期"
+              label="Registration date"
               width="170">
           </el-table-column>
           <el-table-column
               prop="visitState"
-              label="是否已诊"
+              label="Has it been diagnosed?"
               :formatter="whetherDiagnose"
               width="80">
           </el-table-column>
           <el-table-column
               prop="isBook"
-              label="是否收取病历本"
+              label="Whether to collect medical records"
               :formatter="whetherBook"
               width="120">
           </el-table-column>
           <el-table-column
               prop="visitState"
-              label="状态"
+              label="state"
               :formatter="stateShift"
               width="100">
           </el-table-column>
-          <!--        <el-descriptions-item label="状态" :span="2" v-if="registerValue.visitState===1"><el-tag type="success">已挂号</el-tag></el-descriptions-item>-->
-          <!--        <el-descriptions-item label="状态" :span="2" v-else-if="registerValue.visitState===2"><el-tag type="warning">医生接诊</el-tag></el-descriptions-item>-->
-          <el-table-column label="操作" width="130px">
+          <el-table-column label="operate" width="130px">
             <template slot-scope="scope">
-              <el-button type ="info" @click="doPrint(scope.row)" round>打印发票</el-button>
+              <el-button type ="info" @click="doPrint(scope.row)" round>Print invoice</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -289,7 +286,7 @@
         </div>
       </el-card>
     <el-dialog
-        title="发票信息"
+        title="Invoice Information"
         :visible.sync="dialogPrint"
         width="45%"
         center>
@@ -297,46 +294,46 @@
           ref="form"
           :model="invoice"
           label-width="150px">
-        <el-form-item label="发票编号:">
+        <el-form-item label="Invoice number:">
          <el-card class="box-card" v-text="invoice.invoiceNum">
          </el-card>
         </el-form-item>
-        <el-form-item label="发票金额:">
+        <el-form-item label="Invoice amount:">
           <el-card class="box-card" v-text="invoice.money">
           </el-card>
         </el-form-item>
-        <el-form-item label="发票状态:">
+        <el-form-item label="Invoice status:">
           <el-card class="box-card" v-text="invoice.state">
           </el-card>
         </el-form-item>
-        <el-form-item label="收/退费时间:">
+        <el-form-item label="Collection/refund time:">
           <el-card class="box-card" v-text="invoice.creationTime">
           </el-card>
         </el-form-item>
-        <el-form-item label="收/退费人员ID:">
+        <el-form-item label="ID of person who collects/refunds fees:">
           <el-card class="box-card" v-text="invoice.userID">
           </el-card>
         </el-form-item>
-        <el-form-item label="挂号ID:">
+        <el-form-item label="Registration ID:">
           <el-card class="box-card" v-text="invoice.registID">
           </el-card>
         </el-form-item>
-        <el-form-item label="收费方式:">
+        <el-form-item label="Charging method:">
           <el-card class="box-card" v-text="invoice.feeType">
           </el-card>
         </el-form-item>
-        <el-form-item label="冲红发票号码:">
+        <el-form-item label="red invoice number:">
           <el-card class="box-card" v-text="invoice.back">
           </el-card>
         </el-form-item>
-        <el-form-item label="发票状态:">
+        <el-form-item label="Invoice status:">
           <el-card class="box-card" v-text="invoice.dailyState">
           </el-card>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogPrint = false">取 消</el-button>
-        <el-button type="primary" @click="dialogPrint = false">确 定</el-button>
+        <el-button @click="dialogPrint = false">Cancel</el-button>
+        <el-button type="primary" @click="dialogPrint = false">Sure</el-button>
     </span>
     </el-dialog>
   </div>
@@ -374,33 +371,36 @@ export default {
       query_name:'',
       list:[],
       invoice:[],
-      Gender:['男','女'],
+      Gender:['male','female'],
+      // ageType:['year','month','day'],
       ageType:['年','月','日'],
-      settleID:['自费','市医保'],
+      settleID:['own expense','medical insurance'],
       deptID:[],
       showAdvanceSearchView:false,
       currentPage: 1,
       pageSize:10,
       dialogPrint:false,
-      VisitState:['已挂号','医生接诊','看诊结束','已退号'],
+      VisitState:['Registered','Doctors consultation','The consultation is over','Number has been cancelled'],
+      // Noon:['morning','afternoon'],
       Noon:['上午','下午'],
+      // IsBook:['yes','no'],
       IsBook:['是','否'],
-      RegistLeID:['普通号','专家号'],
+      RegistLeID:['Ordinary number','Expert account'],
       registerRules: {
-        caseNumber: [{required: true, message: '请输入病历号', trigger: 'blur'}],
-        realName: [{required: true, message: '请输入真实姓名', trigger: 'blur'}],
-        gender: [{required: true, message: '请输入性别', trigger: 'blur'}],
-        age: [{required: true, message: '请输入年龄', trigger: 'blur'}],
-        ageType: [{required: true, message: '请输入年龄类型', trigger: 'blur'}],
-        visitDate: [{required: true, message: '请输入看诊时间', trigger: 'blur'}],
-        noon: [{required: true, message: '请输入午别', trigger: 'blur'}],
-        deptID: [{required: true, message: '请输入挂号科室ID', trigger: 'blur'}],
-        userID: [{required: true, message: '请输入挂号医生ID', trigger: 'blur'}],
-        registLeID: [{required: true, message: '请输入挂号级别', trigger: 'blur'}],
-        settleID: [{required: true, message: '请输入结算类别', trigger: 'blur'}],
-        registTime: [{required: true, message: '请输入挂号时间', trigger: 'blur'}],
-        registerID: [{required: true, message: '请输入挂号员ID', trigger: 'blur'}],
-        visitState: [{required: true, message: '请输入挂号状态', trigger: 'blur'}],
+        caseNumber: [{required: true, message: 'Please enter medical record number', trigger: 'blur'}],
+        realName: [{required: true, message: 'please enter your real name', trigger: 'blur'}],
+        gender: [{required: true, message: 'Please enter gender', trigger: 'blur'}],
+        age: [{required: true, message: 'Please enter your age', trigger: 'blur'}],
+        ageType: [{required: true, message: 'Please enter age type', trigger: 'blur'}],
+        visitDate: [{required: true, message: 'Please enter the consultation time', trigger: 'blur'}],
+        noon: [{required: true, message: 'Please enter afternoon farewell', trigger: 'blur'}],
+        deptID: [{required: true, message: 'Please enter the registration department ID', trigger: 'blur'}],
+        userID: [{required: true, message: 'Please enter the registered doctor ID', trigger: 'blur'}],
+        registLeID: [{required: true, message: 'Please enter the registration level', trigger: 'blur'}],
+        settleID: [{required: true, message: 'Please enter billing category', trigger: 'blur'}],
+        registTime: [{required: true, message: 'Please enter the registration time', trigger: 'blur'}],
+        registerID: [{required: true, message: 'Please enter the registration clerk ID', trigger: 'blur'}],
+        visitState: [{required: true, message: 'Please enter registration status', trigger: 'blur'}],
       }
     }
   },
@@ -431,31 +431,31 @@ export default {
     doAdd(){
       this.$refs['registerValue'].validate(valid => {
         if (valid) {
-          if (this.registerValue.gender ==='男'){
+          if (this.registerValue.gender ==='male'){
             this.registerValue.gender = '71';
           } else {
             this.registerValue.gender = '72';
           }
-          if (this.registerValue.settleID ==='自费'){
+          if (this.registerValue.settleID ==='At own expense'){
             this.registerValue.settleID = '1';
           } else {
             this.registerValue.settleID = '2';
           }
-          if (this.registerValue.registLeID ==='专家号'){
+          if (this.registerValue.registLeID ==='Expert account'){
             this.registerValue.registLeID = '1';
           } else {
             this.registerValue.registLeID = '2';
           }
-          if (this.registerValue.visitState ==='已挂号'){
+          if (this.registerValue.visitState ==='Registered'){
             this.registerValue.visitState = '1';
-          } else if(this.registerValue.visitState === '医生接诊'){
+          } else if(this.registerValue.visitState === 'doctor consultation'){
             this.registerValue.visitState = '2';
-          } else if(this.registerValue.visitState === '看诊结束') {
+          } else if(this.registerValue.visitState === 'End of consultation') {
             this.registerValue.visitState = '3';
           } else {
             this.registerValue.visitState = '4';
           }
-          if (this.registerValue.isBook ==='是'){
+          if (this.registerValue.isBook ==='yes'){
             this.registerValue.registLeID = '1';
           } else {
             this.registerValue.registLeID = '0';
@@ -474,7 +474,6 @@ export default {
       console.log(data);
       console.log(this.registerValue);
       this.dialogPrint = true;
-      // let param=this.$qs.stringify(this.sterValue)
       this.$axios.post('/register_clerk/print',data).then( (resp)=> {
         this.invoice = resp.data.data
         console.log(this.invoice)
@@ -484,45 +483,43 @@ export default {
     },
     stateShift(row, column){
       if(row[column.property] === 1){
-        return '已挂号'
+        return 'Registered'
       }else if(row[column.property] === 2){
-        return '医生接诊'
+        return 'doctor consultation'
       }else if(row[column.property] === 3){
-        return '看诊结束'
+        return 'End of consultation'
       }else {
-        return '已退号'
+        return 'Number canceled'
       }
     },
     whetherDiagnose(row, column){
       if(row[column.property] < 2) {
-        return '否'
+        return 'no'
       } else {
-        return '是'
+        return 'yes'
       }
     },
     whetherBook(row, column){
       if(row[column.property] === '1') {
-        return '是'
+        return 'yes'
       }else {
-        return '否'
+        return 'no'
       }
     },
     isGender(row, column) {
       if(row[column.property] === 71){
-        return '男'
+        return 'male'
       } else {
-        return  '女'
+        return  'female'
       }
     },
     handleSizeChange(val) {
       this.pageSize = val;
       this.initData();
-      // console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       this.currentPage = val;
       this.initData();
-      // console.log(`当前页: ${val}`);
     }
   }
 }
