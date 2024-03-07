@@ -3,7 +3,7 @@ import router from "@/router";
 import Element from "element-ui"
 import { Message } from "element-ui";
 
-axios.defaults.baseURL = "http://localhost:1218"
+axios.defaults.baseURL = "http://localhost:8080"
 
 const request = axios.create({
     timeout: 5000,

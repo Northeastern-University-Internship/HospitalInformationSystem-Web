@@ -31,7 +31,6 @@ export default {
 
             let index = state.editableTabs.findIndex(e => e.name === tab.name);
             console.log("tab2:", tab);
-            // console.log("state:", state);
             if (index === -1 && tab.title !== undefined) {
                 state.editableTabs.push({
                     title: tab.title,

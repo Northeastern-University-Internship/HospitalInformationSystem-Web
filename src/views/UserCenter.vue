@@ -5,7 +5,7 @@
       <h3>
         your identity：
         <el-tag v-if="userInfo.UseType === 1" effect="dark" type="danger">hospital administrator</el-tag>
-        <el-tag v-else-if="userInfo.UseType === 2" effect="dark" type="info">Registered Order Collector</el-tag>
+        <el-tag v-else-if="userInfo.UseType === 2" effect="dark" type="info">Registered toll collector</el-tag>
         <el-tag v-else-if="userInfo.UseType === 3" effect="dark" type="success">outpatient doctor</el-tag>
         <el-tag v-else-if="userInfo.UseType === 4" effect="dark" type="success">medical technician</el-tag>
         <el-tag v-else-if="userInfo.UseType === 5" effect="dark" type="primary">pharmacy operator</el-tag>
