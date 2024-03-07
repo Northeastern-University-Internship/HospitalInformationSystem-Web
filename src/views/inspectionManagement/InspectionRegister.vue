@@ -92,7 +92,10 @@
         <el-button class="transfer-footer" slot="right-footer" size="small">View selected</el-button>
       </el-transfer>
       <el-button type="info" style="margin-left: 10px" size="small" @click="maintainDialog = false">quit</el-button>
-    </el-dialog title="hint" :visible.sync="dialogVisible" width="40%">
+    </el-dialog
+        title="hint"
+        :visible.sync="dialogVisible"
+        width="40%">
       <div>
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px" class="demo-ruleForm">
           <el-form-item label="Project code" prop="itemCode">
