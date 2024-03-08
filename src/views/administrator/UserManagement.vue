@@ -86,7 +86,7 @@ export default {
   methods: {
     fetchUsers() {
       // Adjust the URL to your API endpoint
-      axios.get('/user/queryUserAll')
+      axios.get('/queryUserAll')
         .then(response => {
           this.users = response.data.data;
         })
