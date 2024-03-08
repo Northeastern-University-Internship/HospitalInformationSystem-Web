@@ -81,9 +81,6 @@ router.beforeEach((to, from, next) => {
       store.commit("changeRouteStatus", hasRoute)
     })
   }
-
-
-
   next();
 })
 
