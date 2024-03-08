@@ -1,252 +1,252 @@
 <template>
-   <div>
-     <el-input placeholder="Please type in your name" class="my_el_input" v-model="query_name">
-       <el-button slot="append" icon="el-icon-search" @click="doQuery"></el-button>
-     </el-input>
-     <el-button-group>
-       <el-button style="margin-left: 50px;" type="primary" @click="showAdvanceSearchView = !showAdvanceSearchView">
-         <i :class="showAdvanceSearchView?'fa fa-angle-double-up':'fa fa-angle-double-down'"
+    <div>
+      <el-input placeholder="Please type in your name" class="my_el_input" v-model="query_name">
+        <el-button slot="append" icon="el-icon-search" @click="doQuery"></el-button>
+      </el-input>
+      <el-button-group>
+        <el-button style="margin-left: 50px;" type="primary" @click="showAdvanceSearchView = !showAdvanceSearchView">
+          <i :class="showAdvanceSearchView?'fa fa-angle-double-up':'fa fa-angle-double-down'"
             aria-hidden="true"></i>
             registered
-       </el-button>
-     </el-button-group>
-     <transition name="slide-fade">
-       <div v-show="showAdvanceSearchView"
+        </el-button>
+      </el-button-group>
+      <transition name="slide-fade">
+        <div v-show="showAdvanceSearchView"
             style="border: 1px solid #409eff;border-radius: 5px;box-sizing: border-box;padding: 5px;margin: 10px 0px;">
-         <el-form :model="registerValue" :rules="registerRules" ref="registerValue">
-           <el-row>
-             <el-col :span="5">
-               <el-form-item label="Medical record number:" prop="caseNumber">
-                 <el-input size="mini" style="width: 180px" prefix-icon="el-icon-edit"
-                           v-model="registerValue.caseNumber" placeholder="Medical Record Number" clearable></el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="4">
-               <el-form-item label="Name:" prop="realName">
-                 <el-input v-model="registerValue.realName" placeholder="Name" size="mini"
-                           style="width: 150px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="3">
-               <el-form-item label="gender:" prop="Gender">
-                 <el-select v-model="registerValue.gender" placeholder="gender" size="mini" style="width: 80px;">
-                   <el-option
-                       v-for="item in Gender"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="4">
-               <el-form-item label="Age:" prop="age">
-                 <el-input v-model="registerValue.age" placeholder="Age" size="mini"
-                           style="width: 140px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="2">
-               <el-form-item label="" prop="ageType">
-                 <el-select v-model="registerValue.ageType" placeholder="year" size="mini" style="width: 80px;">
-                   <el-option
-                       v-for="item in ageType"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="6">
-               <el-form-item label="Birthdate:" prop="birthDate">
-                 <el-date-picker
-                     v-model="registerValue.birthDate"
-                     type="date"
-                     placeholder="Select date">
-                 </el-date-picker>
-               </el-form-item>
-             </el-col>
-           </el-row>
-           <el-row>
-             <el-col :span="5">
-               <el-form-item label="ID card number:" prop="iDnumber">
-                 <el-input v-model="registerValue.iDnumber" placeholder="ID card number" size="mini"
-                           style="width: 180px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="5">
-               <el-form-item label="HomeAddress:" prop="homeAddress">
-                 <el-input v-model="registerValue.homeAddress" placeholder="HomeAddress" size="mini"
-                           style="width: 180px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="3">
-               <el-form-item label="Goodbye:" prop="noon">
-                 <el-select v-model="registerValue.noon" placeholder="Noon Farewell" size="mini" style="width: 80px;">
-                   <el-option
-                       v-for="item in Noon"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="5">
-               <el-form-item label="Registration Department ID:" prop="deptID">
-                 <el-input v-model="registerValue.deptID" placeholder="Registration Department ID" size="mini"
-                           style="width: 150px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="6">
-               <el-form-item label="Visit date:" prop="visitDate">
-                 <el-date-picker
-                     v-model="registerValue.visitDate"
-                     type="date"
-                     placeholder="Select date">
-                 </el-date-picker>
-               </el-form-item>
-             </el-col>
-           </el-row>
-           <el-row>
+          <el-form :model="registerValue" :rules="registerRules" ref="registerValue">
+            <el-row>
+              <el-col :span="5">
+                <el-form-item label="Medical record number:" prop="caseNumber">
+                  <el-input size="mini" style="width: 180px" prefix-icon="el-icon-edit"
+                            v-model="registerValue.caseNumber" placeholder="Medical Record Number" clearable></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="Name:" prop="realName">
+                  <el-input v-model="registerValue.realName" placeholder="Name" size="mini"
+                            style="width: 150px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="3">
+                <el-form-item label="gender:" prop="Gender">
+                  <el-select v-model="registerValue.gender" placeholder="gender" size="mini" style="width: 80px;">
+                    <el-option
+                        v-for="item in Gender"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="Age:" prop="age">
+                  <el-input v-model="registerValue.age" placeholder="Age" size="mini"
+                            style="width: 140px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="2">
+                <el-form-item label="" prop="ageType">
+                  <el-select v-model="registerValue.ageType" placeholder="year" size="mini" style="width: 80px;">
+                    <el-option
+                        v-for="item in ageType"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="Birthdate:" prop="birthDate">
+                  <el-date-picker
+                      v-model="registerValue.birthDate"
+                      type="date"
+                      placeholder="Select date">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5">
+                <el-form-item label="ID card number:" prop="iDnumber">
+                  <el-input v-model="registerValue.iDnumber" placeholder="ID card number" size="mini"
+                            style="width: 180px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="HomeAddress:" prop="homeAddress">
+                  <el-input v-model="registerValue.homeAddress" placeholder="HomeAddress" size="mini"
+                            style="width: 180px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="3">
+                <el-form-item label="Goodbye:" prop="noon">
+                  <el-select v-model="registerValue.noon" placeholder="Noon Farewell" size="mini" style="width: 80px;">
+                    <el-option
+                        v-for="item in Noon"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="Registration Department ID:" prop="deptID">
+                  <el-input v-model="registerValue.deptID" placeholder="Registration Department ID" size="mini"
+                            style="width: 150px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="Visit date:" prop="visitDate">
+                  <el-date-picker
+                      v-model="registerValue.visitDate"
+                      type="date"
+                      placeholder="Select date">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
             <el-col :span="5">
-               <el-form-item label="Registered doctor ID:" prop="userID">
-                 <el-input v-model="registerValue.userID" placeholder="Registration Department ID" size="mini"
-                           style="width: 155px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="4">
-               <el-form-item label="Registration level:" prop="registLeID">
-                 <el-select v-model="registerValue.registLeID" placeholder="Registration Level" size="mini" style="width: 100px;">
-                   <el-option
-                       v-for="item in RegistLeID"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="4">
-               <el-form-item label="Settlement category:" prop="settleID">
-                 <el-select v-model="registerValue.settleID" placeholder="At your own expense" size="mini" style="width: 120px;">
-                   <el-option
-                       v-for="item in settleID"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="5">
-               <el-form-item label="Register ID:" prop="registerID">
-                 <el-input v-model="registerValue.registerID" placeholder="Register ID" size="mini"
-                           style="width: 160px;" filterable>
-                 </el-input>
-               </el-form-item>
-             </el-col>
-             <el-col :span="6">
-               <el-form-item label="Registration time:" prop="registTime">
-                 <el-date-picker
-                     v-model="registerValue.registTime"
-                     type="datetime"
-                     placeholder="Select date and time">
-                 </el-date-picker>
-               </el-form-item>
-             </el-col>
-           </el-row>
-           <el-row>
-             <el-col :span="5">
-               <el-form-item label="visit status:" prop="visitState">
-                 <el-select v-model="registerValue.visitState" placeholder="Visit State" size="mini" style="width: 165px;">
-                   <el-option
-                       v-for="item in VisitState"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="4">
-               <el-form-item label="Medical Record Book:" prop="isBook">
-                 <el-select v-model="registerValue.isBook" placeholder="Medical Record Book" size="mini" style="width: 100px;">
-                   <el-option
-                       v-for="item in IsBook"
-                       :key="item"
-                       :label="item"
-                       :value="item">
-                   </el-option>
-                 </el-select>
-               </el-form-item>
-             </el-col>
-             <el-col :span="24">
-               <el-button style="margin-left: 90%" type="success" @click="doAdd();doQuery()">Register</el-button>
-               <!-- <el-button>Reset</el-button>-->
-             </el-col>
-           </el-row>
-         </el-form>
-       </div>
-     </transition>
-       <el-card class="card">
-         <el-table
-             :data="list"
-             height="600"
-             border
-             stripe
-             style="width: 100%">
-           <el-table-column
-               prop="caseNumber"
-               fixed
-               label="Medical Record Number"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="realName"
-               label="name"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="gender"
-               label="gender"
-               :formatter="isGender"
-               width="60">
-           </el-table-column>
-           <el-table-column
-               prop="idnumber"
-               label="ID card number"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="birthDate"
-               label="date of birth"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="visitDate"
-               label="Visiting time"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="deptID"
-               label="Registration Department ID"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="visitDate"
-               label="Date of consultation"
-               width="100">
-           </el-table-column>
-           <el-table-column
-               prop="registTime"
-               label="Registration Date"
+                <el-form-item label="Registered doctor ID:" prop="userID">
+                  <el-input v-model="registerValue.userID" placeholder="Registration Department ID" size="mini"
+                            style="width: 155px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="Registration level:" prop="registLeID">
+                  <el-select v-model="registerValue.registLeID" placeholder="Registration Level" size="mini" style="width: 100px;">
+                    <el-option
+                        v-for="item in RegistLeID"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="Settlement category:" prop="settleID">
+                  <el-select v-model="registerValue.settleID" placeholder="At your own expense" size="mini" style="width: 120px;">
+                    <el-option
+                        v-for="item in settleID"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5">
+                <el-form-item label="Register ID:" prop="registerID">
+                  <el-input v-model="registerValue.registerID" placeholder="Register ID" size="mini"
+                            style="width: 160px;" filterable>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="Registration time:" prop="registTime">
+                  <el-date-picker
+                      v-model="registerValue.registTime"
+                      type="datetime"
+                      placeholder="Select date and time">
+                  </el-date-picker>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="5">
+                <el-form-item label="visit status:" prop="visitState">
+                  <el-select v-model="registerValue.visitState" placeholder="Visit State" size="mini" style="width: 165px;">
+                    <el-option
+                        v-for="item in VisitState"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="4">
+                <el-form-item label="Medical Record Book:" prop="isBook">
+                  <el-select v-model="registerValue.isBook" placeholder="Medical Record Book" size="mini" style="width: 100px;">
+                    <el-option
+                        v-for="item in IsBook"
+                        :key="item"
+                        :label="item"
+                        :value="item">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-button style="margin-left: 90%" type="success" @click="doAdd();doQuery()">Register</el-button>
+                <!-- <el-button>Reset</el-button>-->
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+      </transition>
+        <el-card class="card">
+          <el-table
+              :data="list"
+              height="600"
+              border
+              stripe
+              style="width: 100%">
+            <el-table-column
+                prop="caseNumber"
+                fixed
+                label="Medical Record Number"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="realName"
+                label="name"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="gender"
+                label="gender"
+                :formatter="isGender"
+                width="60">
+            </el-table-column>
+            <el-table-column
+                prop="idnumber"
+                label="ID card number"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="birthDate"
+                label="date of birth"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="visitDate"
+                label="Visiting time"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="deptID"
+                label="Registration Department ID"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="visitDate"
+                label="Date of consultation"
+                width="100">
+            </el-table-column>
+            <el-table-column
+                prop="registTime"
+                label="Registration Date"
                width="170">
            </el-table-column>
            <el-table-column
