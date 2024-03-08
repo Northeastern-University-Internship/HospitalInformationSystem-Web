@@ -17,7 +17,7 @@
                 <el-form-item>
                   <el-button type="primary" icon="el-icon-s-custom" @click="submitForm('User')">Log in</el-button>
                   <el-button @click="resetForm('User')" icon="el-icon-refresh">reset</el-button>
-                  <el-button type="success" icon="el-icon-s-custom" @click="submitNewUserForm">Signup</el-button>
+                  <!-- <el-button type="success" icon="el-icon-s-custom" @click="submitNewUserForm">Signup</el-button> -->
                 </el-form-item>
               </el-form>
             </div>

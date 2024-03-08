@@ -3,12 +3,12 @@
     <el-card class="box-card">
       <div class="add-user-action">
         <el-button type="primary" @click="showAddUserDialog">Add New User</el-button>
+        <!-- <el-button type="primary" icon="el-icon-s-custom" @click="submitNewUserForm">Signup</el-button> -->
       </div>
       
       <el-table :data="users" style="width: 100%">
         <el-table-column prop="id" label="ID" width="180"></el-table-column>
         <el-table-column prop="userName" label="Username"></el-table-column>
-        <el-table-column prop="password" label="Password"></el-table-column>
         <el-table-column prop="realName" label="Real Name"></el-table-column>
         <el-table-column prop="useType" label="User Type"></el-table-column>
         <el-table-column label="Actions" width="180">
@@ -50,9 +50,6 @@
         <!-- Form fields for user details, similar to the add form -->
         <el-form-item label="Username">
           <el-input v-model="editUserForm.userName"></el-input>
-        </el-form-item>
-        <el-form-item label="Password">
-          <el-input v-model="editUserForm.password"></el-input>
         </el-form-item>
         <el-form-item label="Real Name">
           <el-input v-model="editUserForm.realName"></el-input>
@@ -97,6 +94,10 @@ export default {
           console.error("Error fetching users:", error);
         });
     },
+    submitNewUserForm() {
+    this.$router.push('/signup');
+  },
+    
     showAddUserDialog() {
       this.addUserForm = {}; // Reset the form
       this.addDialogVisible = true;
@@ -166,7 +167,6 @@ export default {
   }
 };
 </script>
-
 
 <style scoped>
 .add-user-action {
