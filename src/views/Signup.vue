@@ -27,7 +27,6 @@
           <div class="form-buttons">
             <el-button type="primary" @click="submitForm('userForm')">Register</el-button>
             <el-button @click="resetForm('userForm')">Reset</el-button>
-            <el-button type="info" @click="loginForm">Login</el-button>
           </div>
         </el-form>
       </div>
