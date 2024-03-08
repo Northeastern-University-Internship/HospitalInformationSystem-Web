@@ -1,178 +1,172 @@
 <template>
   <div class="user-management">
-    <!-- Actions for Adding a New User -->
-    <div class="add-user-action">
-      <button class="btn add-user" @click="showAddUserModal">Add New User</button>
-    </div>
+    <el-card class="box-card">
+      <div class="add-user-action">
+        <el-button type="primary" @click="showAddUserDialog">Add New User</el-button>
+      </div>
+      
+      <el-table :data="users" style="width: 100%">
+        <el-table-column prop="id" label="ID" width="180"></el-table-column>
+        <el-table-column prop="userName" label="Username"></el-table-column>
+        <el-table-column prop="password" label="Password"></el-table-column>
+        <el-table-column prop="realName" label="Real Name"></el-table-column>
+        <el-table-column prop="useType" label="User Type"></el-table-column>
+        <el-table-column label="Actions" width="180">
+          <template slot-scope="scope">
+            <el-button size="mini" @click="showEditUserDialog(scope.row)">Edit</el-button>
+            <el-button size="mini" type="danger" @click="confirmDeletion(scope.row.id)">Delete</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
     
-    <!-- User Table -->
-    <div class="table-responsive">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>UserName</th>
-            <th>Password</th>
-            <th>RealName</th>
-            <th>UseType</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" :key="user.id">
-            <td>{{ user.id }}</td>
-            <td>{{ user.userName }}</td>
-            <td>{{ user.password }}</td>
-            <td>{{ user.realName }}</td>
-            <td>{{ user.useType }}</td>
-            <td>
-              <button class="btn edit" @click="editUser(user)">Edit</button>
-              <button class="btn delete" @click="confirmDeletion(user.id)">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- Add User Dialog -->
+    <el-dialog title="Add New User" :visible.sync="addDialogVisible" @close="addDialogClosed">
+      <el-form :model="addUserForm" label-width="120px">
+        <!-- Form fields for user details -->
+        <!-- Assuming userName, password, realName, and useType are the fields you want to capture -->
+        <el-form-item label="Username">
+          <el-input v-model="addUserForm.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="Password">
+          <el-input v-model="addUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="Real Name">
+          <el-input v-model="addUserForm.realName"></el-input>
+        </el-form-item>
+        <el-form-item label="User Type">
+          <el-input v-model="addUserForm.useType"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="doAdd">Add</el-button>
+      </span>
+    </el-dialog>
+    
+    <!-- Edit User Dialog -->
+    <el-dialog title="Edit User" :visible.sync="editDialogVisible" @close="editDialogClosed">
+      <el-form :model="editUserForm" label-width="120px">
+        <!-- Form fields for user details, similar to the add form -->
+        <el-form-item label="Username">
+          <el-input v-model="editUserForm.userName"></el-input>
+        </el-form-item>
+        <el-form-item label="Password">
+          <el-input v-model="editUserForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="Real Name">
+          <el-input v-model="editUserForm.realName"></el-input>
+        </el-form-item>
+        <el-form-item label="User Type">
+          <el-input v-model="editUserForm.useType"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="doEdit">Save</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+// Import Axios if it's not globally available in your project
+// You might need to adjust import paths based on your project structure
+import axios from 'axios';
+
 export default {
-  name: "UserManagement",
+  name: 'UserManagement',
   data() {
     return {
       users: [],
-      addUserForm: {}, // Form data for adding users
-      editUserForm: {}, // Form data for editing users
-      msg: '', // Message to display feedback
-      addDialogVisible: false, // Controls visibility of the add user dialog
-      editDialogVisible: false, // Controls visibility of the edit user dialog
+      addUserForm: {},
+      editUserForm: {},
+      addDialogVisible: false,
+      editDialogVisible: false,
+      msg: ''
     };
   },
   methods: {
     fetchUsers() {
-      let url = 'user/queryUserAll';
-      this.$axios.get(url)
+      // Adjust the URL to your API endpoint
+      axios.get('/user/queryUserAll')
         .then(response => {
           this.users = response.data.data;
         })
         .catch(error => {
-          console.log('error=', error);
-          console.error('Error fetching users:', error);
+          console.error("Error fetching users:", error);
         });
     },
-
+    showAddUserDialog() {
+      this.addUserForm = {}; // Reset the form
+      this.addDialogVisible = true;
+    },
+    addDialogClosed() {
+      this.addUserForm = {};
+    },
     doAdd() {
-      let url = '/user/add';
-      let params = this.$qs.stringify(this.addUserForm);
-      this.$axios.post(url, params)
-        .then(resp => {
-          if (resp.data.code === 200) {
-            this.msg = 'User added successfully';
-            this.fetchUsers(); // Refresh the user list
+      // Adjust the URL and API endpoint as necessary
+      axios.post('/user/add', this.addUserForm)
+        .then(response => {
+          if (response.data.code === 200) {
+            this.fetchUsers(); // Refresh the user list after adding
+            this.addDialogVisible = false;
           } else {
             this.msg = 'Failed to add user, please try again';
           }
         })
         .catch(error => {
-          console.log('error=', error);
+          console.error("Error adding user:", error);
           this.msg = 'Failed to add user, please try again';
         });
-      this.addDialogVisible = false;
     },
-
-    doDelete(userId) {
-      if (!confirm("Are you sure you want to delete this user?")) {
-        return; // Stop if the user does not confirm
-      }
-      let url = '/user/delete/' + userId;
-      this.$axios.post(url)
-        .then(resp => {
-          if (resp.data.code === 200) {
-            this.msg = 'User deleted successfully';
-            this.fetchUsers(); // Refresh the user list
-          } else {
-            this.msg = 'Failed to delete user, please try again';
-          }
-        })
-        .catch(error => {
-          console.log('error=', error);
-          this.msg = 'Failed to delete user, please try again';
-        });
+    showEditUserDialog(user) {
+      this.editUserForm = Object.assign({}, user); // Clone the user object
+      this.editDialogVisible = true;
     },
-
+    editDialogClosed() {
+      this.editUserForm = {};
+    },
     doEdit() {
-      let url = '/user/update';
-      let params = this.$qs.stringify(this.editUserForm);
-      this.$axios.post(url, params)
-        .then(resp => {
-          if (resp.data.code === 200) {
-            this.msg = 'User updated successfully';
-            this.fetchUsers(); // Refresh the user list
+      // Adjust the URL and API endpoint as necessary
+      axios.post('/user/update', this.editUserForm)
+        .then(response => {
+          if (response.data.code === 200) {
+            this.fetchUsers(); // Refresh the user list after editing
+            this.editDialogVisible = false;
           } else {
             this.msg = 'User update failed, please try again';
           }
         })
         .catch(error => {
-          console.log('error=', error);
+          console.error("Error updating user:", error);
           this.msg = 'User update failed, please try again';
         });
-      this.editDialogVisible = false;
     },
-
-    showAddUserDialog() {
-      this.addUserForm = {}; // Reset the form
-      this.addDialogVisible = true;
-    },
-
-    showEditUserDialog(user) {
-      this.editUserForm = { ...user }; // Clone the user data into the form
-      this.editDialogVisible = true;
-    },
-
-    // Reset form fields when the dialog is closed
-    addDialogClosed() {
-      this.addUserForm = {};
-    },
-
-    editDialogClosed() {
-      this.editUserForm = {};
+    confirmDeletion(userId) {
+      if (confirm("Are you sure you want to delete this user?")) {
+        // Adjust the URL and API endpoint as necessary
+        axios.post(`/user/delete/${userId}`)
+          .then(response => {
+            if (response.data.code === 200) {
+              this.fetchUsers(); // Refresh the user list after deletion
+            } else {
+              this.msg = 'Failed to delete user, please try again';
+            }
+          })
+          .catch(error => {
+            console.error("Error deleting user:", error);
+            this.msg = 'Failed to delete user, please try again';
+          });
+      }
     },
   },
   mounted() {
-    this.fetchUsers(); // Fetch users when component is mounted
+    this.fetchUsers(); // Initial fetch of the user list
   }
-}
+};
 </script>
 
-import axios from 'axios';
-
-export default {
-  name: "UserManagement",
-  data() {
-    return {
-      users: [], // This will hold the array of users
-    };
-  },
-  methods: {
-    fetchUsers() {
-      // Replace with your actual API endpoint
-      axios.get('/queryUserAll')
-        .then(response => {
-          this.users = response.data.data; // Assuming the data comes in this format
-        })
-        .catch(error => {
-          console.error("There was an error fetching the users:", error);
-          // Handle the error. Show user feedback
-        });
-    },
-    // ... other methods for add, edit, delete ...
-  },
-  mounted() {
-    this.fetchUsers(); // Fetch users when component is mounted
-  }
-}
-</script>
 
 <style scoped>
 .add-user-action {
