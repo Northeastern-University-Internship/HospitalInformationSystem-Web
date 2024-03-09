@@ -35,7 +35,7 @@
 
           <el-button  icon="el-icon-search"
                       @click="doQuery()">
-            统计
+            SEARCH STATSTICS
           </el-button>
         </el-form>
       </div>

@@ -49,13 +49,13 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination align='center' @size-change="handleSizeChange" @current-change="handleCurrentChange"
+        <!-- <el-pagination align='center' @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="currentPage"
                        :page-sizes="[2,8,16]"
                        :page-size="pageSize"
                        layout="total, sizes, prev, pager, next, jumper"
                        :total="registerList.length">
-        </el-pagination>
+        </el-pagination> -->
       </div>
     </el-card>
     <el-dialog width="50%" :visible.sync="dialog">

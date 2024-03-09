@@ -76,7 +76,7 @@
             label="Invoice status"
             width="100">
         </el-table-column>
-        <el-table-column label="Daily settlement" width="100">
+        <el-table-column label="Daily settlement" width="200">
           <template slot-scope="scope">
             <el-button type="success" @click="doDaily(scope.row)">Daily settlement</el-button>
           </template>

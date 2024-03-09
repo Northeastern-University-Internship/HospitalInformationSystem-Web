@@ -26,28 +26,28 @@ request.interceptors.response.use(response => {
                 Element.Message.success({showClose: true, message : response.data.msg});
                 return response
             case 303:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:303登录失败"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 303 Login failed"});
                 return Promise.reject(res.msg);
             case 400:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:400请求参数出错"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 400 Request parameter error"});
                 return Promise.reject(res.msg);
             case 401:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:401没有登录"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 401 Not logged in"});
                 return Promise.reject(res.msg);
             case 403:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:403没有权限"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 403 No permission"});
                 return Promise.reject(res.msg);
             case 410:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:410已被删除"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 410 has been deleted"});
                 return Promise.reject(res.msg);
             case 423:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:423已被锁定"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 423 has been locked"});
                 return Promise.reject(res.msg);
             case 500:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:500服务器出错"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 500 Server error"});
                 return Promise.reject(res.msg);
             case 4001:
-                Element.Message.error({showClose: true, message: res.msg + ", 错误类型:4001异常"});
+                Element.Message.error({showClose: true, message: res.msg + ", error type: 4001 exception"});
                 return Promise.reject(res.msg);
         }
         // if (response.data.code === 200) {

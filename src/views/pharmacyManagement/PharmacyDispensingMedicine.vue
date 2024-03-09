@@ -84,7 +84,7 @@
             </template>
 
           </el-table-column>
-          <el-table-column label="operate" width="100px">
+          <el-table-column label="operate" width="150px">
             <!--Modify button-->
             <template slot-scope="scope">
               <el-button type="primary" size="mini"

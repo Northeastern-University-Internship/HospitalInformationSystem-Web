@@ -61,9 +61,9 @@
             label="status"
             width="120">
         </el-table-column>
-        <el-table-column label="operate" width="100px">
+        <el-table-column label="operate" width="150px">
           <template slot-scope="scope">
-            <el-button type ="warning"  @click="doGet(scope.row)" plain>录入</el-button>
+            <el-button type ="warning"  @click="doGet(scope.row)" plain>Register</el-button>
           </template>
         </el-table-column>
 
@@ -104,7 +104,7 @@
           <el-input class="box-card" v-model="checkApplyInFormation.checkOperID" :disabled="true"></el-input>
         </el-form-item>
         <el-form-item label="result:" prop="result">
-          <el-input class="box-card" v-model="checkApplyInFormation.result" placeholder="结果"></el-input>
+          <el-input class="box-card" v-model="checkApplyInFormation.result" placeholder="result"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

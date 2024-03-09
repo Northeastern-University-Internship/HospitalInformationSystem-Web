@@ -274,7 +274,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <div style="display: flex;justify-content: flex-end">
+          <!-- <div style="display: flex;justify-content: flex-end">
             <el-pagination
                 background
                 @size-change="handleSizeChange"
@@ -285,7 +285,7 @@
                 layout="total, sizes, prev, pager, next, jumper, ->, total, slot"
                 :total="list.length">
             </el-pagination>
-          </div>
+          </div> -->
         </el-card>
       <el-dialog
           title="Invoice information"
