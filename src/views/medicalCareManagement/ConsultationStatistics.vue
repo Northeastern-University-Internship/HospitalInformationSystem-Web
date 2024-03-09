@@ -94,7 +94,7 @@
             <el-table-column width="200">
               <template slot-scope="scope">
                 <span v-if="scope.row.expName!==null" style="color: #051525">{{ scope.row.expName }}</span>
-                <span v-else style="color: #051525">药费</span>
+                <span v-else style="color: #051525">Medicine expenses</span>
               </template>
             </el-table-column>
             <el-table-column>

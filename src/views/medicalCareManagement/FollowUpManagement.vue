@@ -106,10 +106,10 @@
                   <el-descriptions-item label="medical record status" :span="3" v-if="medicalRecord.CaseState === 1">
                     <el-tag  effect="dark" size="mini" type="primary">temporary deposit</el-tag>
                   </el-descriptions-item>
-                  <el-descriptions-item label="病历状态" :span="3" v-else-if="medicalRecord.CaseState === 2">
+                  <el-descriptions-item label="medical record status" :span="3" v-else-if="medicalRecord.CaseState === 2">
                     <el-tag  effect="dark" size="mini" type="success">Submitted</el-tag>
                   </el-descriptions-item>
-                  <el-descriptions-item label="病历状态" :span="3" v-else>
+                  <el-descriptions-item label="medical record status" :span="3" v-else>
                     <el-tag  effect="dark" size="mini" type="danger">complete the examination</el-tag>
                   </el-descriptions-item>
                 </el-descriptions>

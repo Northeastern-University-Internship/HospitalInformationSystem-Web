@@ -29,7 +29,7 @@
             <div>
               <el-divider content-position="left"></el-divider>
             </div>
-            <el-empty description="暂未选择患者" v-if="!isChoose"></el-empty>
+            <el-empty description="No patient selected yet" v-if="!isChoose"></el-empty>
             <el-collapse-transition>
               <div v-show="isChoose">
                 <el-descriptions size="mini" title="No patient selected" direction="vertical" :column="4" border>

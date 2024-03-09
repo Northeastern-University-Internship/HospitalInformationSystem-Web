@@ -269,76 +269,76 @@
            <!-- <el-descriptions-item label="status" :span="2" v-if="registerValue.visitState===1"><el-tag type="success">Registered</el -tag></el-descriptions-item>-->
            <!-- <el-descriptions-item label="State" :span="2" v-else-if="registerValue.visitState===2"><el-tag type="warning">Doctor's consultation </el-tag></el-descriptions-item>-->
            <el-table-column label="Operation" width="130px">
-             <template slot-scope="scope">
-               <el-button type ="info" @click="doPrint(scope.row)" round>Print invoice</el-button>
-             </template>
-           </el-table-column>
-         </el-table>
-         <div style="display: flex;justify-content: flex-end">
-           <el-pagination
-               background
-               @size-change="handleSizeChange"
-               @current-change="handleCurrentChange"
-               :current-page.sync="currentPage"
-               :page-sizes="[1, 5, 10, 20, 100]"
-               :page-size="pageSize"
-               layout="total, sizes, prev, pager, next, jumper, ->, total, slot"
-               :total="list.length">
-           </el-pagination>
-         </div>
-       </el-card>
-     <el-dialog
-         title="Invoice information"
-         :visible.sync="dialogPrint"
-         width="45%"
-         center>
-       <el-form
-           ref="form"
-           :model="invoice"
-           label-width="150px">
-         <el-form-item label="Invoice number:">
+              <template slot-scope="scope">
+                <el-button type ="info" @click="doPrint(scope.row)" round>Print invoice</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div style="display: flex;justify-content: flex-end">
+            <el-pagination
+                background
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page.sync="currentPage"
+                :page-sizes="[1, 5, 10, 20, 100]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper, ->, total, slot"
+                :total="list.length">
+            </el-pagination>
+          </div>
+        </el-card>
+      <el-dialog
+          title="Invoice information"
+          :visible.sync="dialogPrint"
+          width="45%"
+          center>
+        <el-form
+            ref="form"
+            :model="invoice"
+            label-width="150px">
+          <el-form-item label="Invoice number:">
           <el-card class="box-card" v-text="invoice.invoiceNum">
           </el-card>
-         </el-form-item>
-         <el-form-item label="Invoice amount:">
-           <el-card class="box-card" v-text="invoice.money">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Invoice status:">
-           <el-card class="box-card" v-text="invoice.state">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Collection/refund time:">
-           <el-card class="box-card" v-text="invoice.creationTime">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Collector/Refund Personnel ID:">
-           <el-card class="box-card" v-text="invoice.userID">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Registration ID:">
-           <el-card class="box-card" v-text="invoice.registID">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Charging method:">
-           <el-card class="box-card" v-text="invoice.feeType">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Red invoice number:">
-           <el-card class="box-card" v-text="invoice.back">
-           </el-card>
-         </el-form-item>
-         <el-form-item label="Invoice status:">
-           <el-card class="box-card" v-text="invoice.dailyState">
-           </el-card>
-         </el-form-item>
-       </el-form>
-       <span slot="footer" class="dialog-footer">
-         <el-button @click="dialogPrint = false">Cancel</el-button>
-         <el-button type="primary" @click="dialogPrint = false">OK</el-button>
-     </span>
-     </el-dialog>
-   </div>
+          </el-form-item>
+          <el-form-item label="Invoice amount:">
+            <el-card class="box-card" v-text="invoice.money">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Invoice status:">
+            <el-card class="box-card" v-text="invoice.state">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Collection/refund time:">
+            <el-card class="box-card" v-text="invoice.creationTime">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Collector/Refund Personnel ID:">
+            <el-card class="box-card" v-text="invoice.userID">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Registration ID:">
+            <el-card class="box-card" v-text="invoice.registID">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Charging method:">
+            <el-card class="box-card" v-text="invoice.feeType">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Red invoice number:">
+            <el-card class="box-card" v-text="invoice.back">
+            </el-card>
+          </el-form-item>
+          <el-form-item label="Invoice status:">
+            <el-card class="box-card" v-text="invoice.dailyState">
+            </el-card>
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogPrint = false">Cancel</el-button>
+          <el-button type="primary" @click="dialogPrint = false">OK</el-button>
+      </span>
+      </el-dialog>
+    </div>
 </template>
 
 <script>
